@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: white;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+  text-align: center;
+  color: rgb(15, 1, 1);
+}
+
+h1 {
+  font-size: 42px;
+}
+
+.subtitle {
+  margin-top: 10px;
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.container {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.card {
+  background: white;
+  color: #333;
+  width: 280px;        /* 🔥 size bada kiya */
+  padding: 35px;       /* 🔥 padding bhi badhayi */
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-12px);
+}
+
+.icon {
+  font-size: 50px;     /* 🔥 icon bhi bada */
+  margin-bottom: 15px;
+}
+
+.card h3 {
+  margin-bottom: 12px;
+  font-size: 22px;
+}
+
+.card p {
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+button {
+  padding: 10px 22px;
+  border: none;
+  background: #56ab2f;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+button:hover {
+  background: #3d8b1f;
+}
