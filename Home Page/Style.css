@@ -1,29 +1,61 @@
-h1{
-    color : rgb(10, 192, 10);
-    text-align-last: center;
-    font-size: 60px;
+body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
 }
-h3{
-    color : blue;
-    text-align:center;
-    font-size: large;
+
+/* Heading styles */
+h1 {
+    color: rgb(10, 192, 10);
+    text-align: center;
+    font-size: clamp(32px, 5vw, 60px); /* responsive font */
 }
-button{
-    color : rgb(256, 256, 256);
+
+h3 {
+    color: blue;
+    text-align: center;
+    font-size: clamp(16px, 2.5vw, 24px);
+}
+
+/* Button base style */
+button {
+    color: rgb(255, 255, 255); /* fixed invalid value */
     background-color: rgb(15, 131, 15);
-    height: 50px;
-    width: 100px;
+    height: auto;
+    width: auto;
+    padding: 12px 20px;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: clamp(14px, 2vw, 20px);
     outline-color: rgb(123, 0, 224);
+    border: none;
 }
-button:active{
+
+/* Click effect */
+button:active {
     box-shadow: none;
     transform: translate(2px, 2px);
 }
-.Farmer-btn{
-    height: 100px;
-    width: 150px;
-    margin-left: 600px;
+
+/* Farmer button */
+.Farmer-btn {
+    display: block;
+    margin: 20px auto; /* centers properly */
+    height: auto;
+    width: 80%;
+    max-width: 200px;
     cursor: pointer;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+    .Farmer-btn {
+        width: 200px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .Farmer-btn {
+        width: 220px;
+    }
 }
