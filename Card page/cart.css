@@ -1,0 +1,13 @@
+body {
+  font-family: Arial;
+  background: #f5fff5;
+  text-align: center;
+}
+
+.cart-item {
+  width: 300px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+}
