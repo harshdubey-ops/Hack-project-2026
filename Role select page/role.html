@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fasal Junction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="main">
+
+  <h1>🌾 FASAL JUNCTION 🌾 </h1>
+  <p class="subtitle">Connecting Farmers Directly to Consumers</p>
+
+  <div class="container">
+
+    <div class="card" onclick="selectRole('farmer')">
+      <div class="icon">👨‍🌾</div>
+      <h3>Farmer</h3>
+      <p>Sell your fresh products directly</p>
+      <button>Select</button>
+    </div>
+
+    <div class="card" onclick="selectRole('customer')">
+      <div class="icon">🛒</div>
+      <h3>Customer</h3>
+      <p>Buy fresh farm products easily</p>
+      <button>Select</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function selectRole(role) {
+  localStorage.setItem("role", role);
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

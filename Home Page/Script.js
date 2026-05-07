@@ -21,3 +21,6 @@ y.addEventListener("mouseleave",function(){
     y.style.backgroundColor = "rgb(15, 142, 0)";
     y.style.color = "white";
 })
+function addToCart() {
+  alert("Product Added To Cart")
+}

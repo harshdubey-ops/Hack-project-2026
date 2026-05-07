@@ -1,97 +1,50 @@
 body {
-    margin: 0;
-    padding: 0;
-    /* text-align: center; */
-    background-image: linear-gradient(to right, rgb(207, 249, 194) , rgb(247, 252, 139));
+  margin: 0;
+  font-family: Arial;
+  background: #f4fff4;
 }
 
-/* Heading styles */
-h1 {
-    color: rgb(10, 192, 10);
-    text-align: center;
-    font-size: clamp(32px, 5vw, 60px); /* responsive font */
+nav {
+  background: green;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-#navbar{
-    background-color: blueviolet;
-    height: 70px;
-    width: auto;
-    margin-top: 0px;
-
-}
-#nav-h3{
-    color: aliceblue;
-    width: 200px;
-    margin: 0%;
-}
-.nav{
-    color: aliceblue;
-    text-decoration: none;
-    padding-right: 100px;
-    padding-left: 20px;
-    padding-top: 10px;
-    font-size: 20px;
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: yellow;
 }
 
-h3 {
-    color: blue;
-    text-align: center;
-    font-size: clamp(16px, 2.5vw, 24px);
-}
-#home-btn{
-    display:flex;
-    gap: 200px;
-    justify-content: center;
-    text-align: center;
+.hero {
+  text-align: center;
+  padding: 50px;
 }
 
-/* Farmer button */
-#temp1{
-    gap: 10px;
-    height: 35px;
-    width: 158px;
-    border-radius: 10px;
-    font-size: clamp(14px, 2vw, 20px);
-    outline-color: rgb(123, 0, 224);
-    border: none;
+.hero input {
+  padding: 10px;
+  width: 300px;
 }
 
-/* Costumer botton */
-#temp2{
-    padding-right:0px;
-    height: 35px;
-    width: 158px;
-    border-radius: 10px;
-    font-size: clamp(14px, 2vw, 20px);
-    outline-color: rgb(123, 0, 224);
-    border: none;
+.products {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
 }
 
-/* Click effect */
-button:active {
-    box-shadow: none;
-    transform: translate(2px, 2px);
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 10px gray;
 }
 
-/* Farmer button */
-.Farmer-btn {
-    display: block;
-    margin: 15px auto; /* centers properly */
-    height: auto;
-    width: 80%;
-    max-width: 300px;
-}
-
-/* Tablet */
-@media (min-width: 768px) {
-    .Farmer-btn {
-        width: 200px;
-    }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-    .Farmer-btn {
-        width: 220px;
-    }
+.card img {
+  width: 250px;
 }

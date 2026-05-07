@@ -1,34 +1,49 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fasal Junction</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div id="navbar">
-        <h3 id="nav-h3">Fasal Junction</h3>
-        <a href="" class="nav">Home</a>
-        <a href="" class="nav">Home</a>
-        <a href="" class="nav">product</a>
-        <a href="" class="nav">about</a>
-        <a href="" class="nav">help</a>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fasal Junction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav>
+    <h1>🌾 Fasal Junction</h1>
+
+    <div>
+      <a href="farmer-login.html">
+        <button>Farmer Login</button>
+      </a>
+
+      <a href="customer-login.html">
+        <button>Customer Login</button>
+      </a>
     </div>
-    <h1>Fasal junction</h1>
-    <h3>
-      “Fasal Junction is a web-based platform that connects farmers directly
-      with consumers for buying and selling fresh produce.”
-    </h3>
-    <div id="home-btn">
-    <a href="../LoginPage/Login.html">
-      <button id="temp1">Farmer</button>
-    </a>
-    <a href="../LoginPage/Login.html">
-      <button id="temp2">Consumer</button>
-    </a>
+  </nav>
+
+  <section class="hero">
+    <h2>Fresh From Farm To Home</h2>
+    <p>Buy fresh products directly from farmers.</p>
+
+    <input type="text" placeholder="Search Products">
+
+    <button>Search</button>
+  </section>
+
+  <section class="products">
+
+    <div class="card">
+      <img src="https://via.placeholder.com/250" alt="product">
+
+      <h3>Fresh Tomatoes</h3>
+
+      <p>₹40/kg</p>
+
+      <button onclick="addToCart()">Add To Cart</button>
     </div>
-    <p></p>
-  </body>
-  <script src="Script.js"></script>
+
+  </section>
+
+  <script src="script.js"></script>
+
+</body>
 </html>
