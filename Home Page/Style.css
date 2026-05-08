@@ -4,6 +4,16 @@ body {
   background: #f4fff4;
 }
 
+.language-buttons{
+      margin-top:10px;
+    }
+
+    .language-buttons button{
+      padding:8px 15px;
+      margin:5px;
+      cursor:pointer;
+    }
+
 nav {
   background: green;
   color: white;

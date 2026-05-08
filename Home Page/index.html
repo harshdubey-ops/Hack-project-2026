@@ -1,52 +1,3 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-  <title>Fasal Junction</title>
-  <link rel="stylesheet" href="Style.css">
-</head>
-<body>
-
-  <nav>
-    <h1>🌾 Fasal Junction</h1>
-
-    <div>
-      <a href="../farmer login/farmer-login.html">
-        <button>Farmer Login</button>
-      </a>
-
-      <a href="../customer login/customer-login.html">
-        <button>Customer Login</button>
-      </a>
-    </div>
-  </nav>
-
-  <section class="hero">
-    <h2>Fresh From Farm To Home</h2>
-    <p>Buy fresh products directly from farmers.</p>
-
-    <input type="text" placeholder="Search Products">
-
-    <button>Search</button>
-  </section>
-
-  <section class="products">
-
-    <div class="card">
-      <img src="https://via.placeholder.com/250" alt="product">
-
-      <h3>Fresh Tomatoes</h3>
-
-      <p>₹40/kg</p>
-
-      <button onclick="addToCart()">Add To Cart</button>
-    </div>
-
-  </section>
-
-  <script src="script.js"></script>
-
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,15 +9,7 @@
   <link rel="stylesheet" href="Style.css">
 
   <style>
-    .language-buttons{
-      margin-top:10px;
-    }
-
-    .language-buttons button{
-      padding:8px 15px;
-      margin:5px;
-      cursor:pointer;
-    }
+    
   </style>
 </head>
 
@@ -124,79 +67,7 @@
 
   </section>
 
-  <script>
-
-    function setEnglish(){
-
-      document.getElementById("title").innerHTML =
-      "🌾 Fasal Junction";
-
-      document.getElementById("farmerBtn").innerHTML =
-      "Farmer Login";
-
-      document.getElementById("customerBtn").innerHTML =
-      "Customer Login";
-
-      document.getElementById("heroTitle").innerHTML =
-      "Fresh From Farm To Home";
-
-      document.getElementById("heroText").innerHTML =
-      "Buy fresh products directly from farmers.";
-
-      document.getElementById("searchBox").placeholder =
-      "Search Products";
-
-      document.getElementById("searchBtn").innerHTML =
-      "Search";
-
-      document.getElementById("productName").innerHTML =
-      "Fresh Tomatoes";
-
-      document.getElementById("price").innerHTML =
-      "₹40/kg";
-
-      document.getElementById("cartBtn").innerHTML =
-      "Add To Cart";
-    }
-
-    function setHindi(){
-
-      document.getElementById("title").innerHTML =
-      "🌾 फसल जंक्शन";
-
-      document.getElementById("farmerBtn").innerHTML =
-      "किसान लॉगिन";
-
-      document.getElementById("customerBtn").innerHTML =
-      "ग्राहक लॉगिन";
-
-      document.getElementById("heroTitle").innerHTML =
-      "खेत से सीधे आपके घर तक";
-
-      document.getElementById("heroText").innerHTML =
-      "किसानों से सीधे ताज़े उत्पाद खरीदें।";
-
-      document.getElementById("searchBox").placeholder =
-      "उत्पाद खोजें";
-
-      document.getElementById("searchBtn").innerHTML =
-      "खोजें";
-
-      document.getElementById("productName").innerHTML =
-      "ताज़े टमाटर";
-
-      document.getElementById("price").innerHTML =
-      "₹40/किलो";
-
-      document.getElementById("cartBtn").innerHTML =
-      "कार्ट में जोड़ें";
-    }
-
-    function addToCart(){
-      alert("Product Added To Cart!");
-    }
-
-  </script>
+  <script src="Script.js"></script>
 
 </body>
 </html>
