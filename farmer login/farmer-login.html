@@ -1,21 +1,102 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Farmer Login</title>
+
+  <!-- CSS -->
   <link rel="stylesheet" href="farmer-login.css">
+
+  <!-- Icons -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
 
-  <div class="login-box">
-    <h1>Farmer Login</h1>
+  <!-- Language Toggle -->
+  <div class="language-toggle">
+    <button onclick="setLanguage('en')">English</button>
+    <button onclick="setLanguage('hi')">हिंदी</button>
+  </div>
 
-    <input type="email" placeholder="Email">
+  <div class="container">
 
-    <input type="password" placeholder="Password">
+    <!-- LOGIN -->
+    <div class="box" id="loginBox">
 
-    <button onclick="loginFarmer()">Login</button>
+      <h1 id="loginTitle">Farmer Login</h1>
+
+      <div class="input-box">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="email" placeholder="Email">
+      </div>
+
+      <div class="input-box">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="password" placeholder="Password">
+      </div>
+
+      <button onclick="loginFarmer()" id="loginBtn">
+        Login
+      </button>
+
+      <p id="newFarmerText">
+        New Farmer?
+        <a href="#" onclick="showSignup()" id="createAccountText">
+          Create Account
+        </a>
+      </p>
+
+    </div>
+
+
+    <!-- SIGNUP -->
+    <div class="box hidden" id="signupBox">
+
+      <h1 id="signupTitle">Farmer Signup</h1>
+
+      <div class="input-box">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="name" placeholder="Full Name">
+      </div>
+
+      <div class="input-box">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="signupEmail" placeholder="Email">
+      </div>
+
+      <div class="input-box">
+        <i class="fa-solid fa-phone"></i>
+        <input type="tel" id="phone" placeholder="Mobile Number">
+      </div>
+
+      <div class="input-box">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="signupPassword"
+          placeholder="Create Password">
+      </div>
+
+      <button onclick="signupFarmer()" id="signupBtn">
+        Signup
+      </button>
+
+      <p id="alreadyAccountText">
+        Already have an account?
+        <a href="#" onclick="hideSignup()" id="loginLinkText">
+          Login
+        </a>
+      </p>
+
+    </div>
+
   </div>
 
   <script src="farmer-login.js"></script>
 
 </body>
+
 </html>
