@@ -1,122 +1,78 @@
-let isHindi = false;
-let isSignup = false;
+// customer-login.js
 
-/* LOGIN TAB */
-
-function showLogin(){
-
-  isSignup = false;
-
-  document.getElementById("formTitle").innerText =
-  isHindi ? "कस्टमर लॉगिन" : "Customer Login";
-
-  document.getElementById("mainBtn").innerText =
-  isHindi ? "लॉगिन" : "Login";
-
-  document.getElementById("nameField").style.display =
-  "none";
-
-  document.getElementById("loginTab")
-  .classList.add("active");
-
-  document.getElementById("signupTab")
-  .classList.remove("active");
+function loginCustomer() {
+  alert("Login Successful");
 }
 
-/* SIGNUP TAB */
-
-function showSignup(){
-
-  isSignup = true;
-
-  document.getElementById("formTitle").innerText =
-  isHindi ? "साइन अप करें" : "Create Account";
-
-  document.getElementById("mainBtn").innerText =
-  isHindi ? "साइन अप" : "Sign Up";
-
-  document.getElementById("nameField").style.display =
-  "block";
-
-  document.getElementById("signupTab")
-  .classList.add("active");
-
-  document.getElementById("loginTab")
-  .classList.remove("active");
+function signupCustomer() {
+  alert("Signup Successful");
 }
 
-/* SUBMIT */
+/* Animated Switch */
 
-function submitForm(){
+function showSignup() {
 
-  const email =
-  document.getElementById("email").value;
+  document.getElementById("loginBox")
+    .classList.add("hidden");
 
-  const password =
-  document.getElementById("password").value;
-
-  if(isSignup){
-
-    const name =
-    document.getElementById("name").value;
-
-    if(name === "" || email === "" || password === ""){
-      alert("Please fill all fields");
-    }
-    else{
-      alert("Account Created Successfully 🌱");
-    }
-
-  }
-
-  else{
-
-    if(email === "" || password === ""){
-      alert("Please fill all fields");
-    }
-    else{
-      alert("Login Successful 🌱");
-    }
-  }
+  document.getElementById("signupBox")
+    .classList.remove("hidden");
 }
 
-/* LANGUAGE TOGGLE */
+function hideSignup() {
 
-function toggleLanguage(){
+  document.getElementById("signupBox")
+    .classList.add("hidden");
 
-  isHindi = !isHindi;
-
-  document.getElementById("welcomeText").innerText =
-  isHindi ?
-  "स्वागत है किसान 👨‍🌾" :
-  "Welcome Farmer 👨‍🌾";
-
-  document.getElementById("subText").innerText =
-  isHindi ?
-  "अपनी फसल, ऑर्डर और खेती के व्यवसाय को आसानी से संभालें।"
-  :
-  "Manage your crops, orders and farming business easily.";
-
-  document.getElementById("langBtn").innerText =
-  isHindi ? "English" : "हिंदी";
-
-  document.getElementById("email").placeholder =
-  isHindi ? "ईमेल पता" : "Email Address";
-
-  document.getElementById("password").placeholder =
-  isHindi ? "पासवर्ड" : "Password";
-
-  document.getElementById("name").placeholder =
-  isHindi ? "पूरा नाम" : "Full Name";
-
-  if(isSignup){
-    showSignup();
-  }
-  else{
-    showLogin();
-  }
+  document.getElementById("loginBox")
+    .classList.remove("hidden");
 }
 
-/* DEFAULT */
+/* Language Toggle */
 
-showLogin();
+function setLanguage(lang) {
+
+  if (lang === "hi") {
+
+    document.getElementById("loginTitle").innerText =
+      "कस्टमर लॉगिन";
+
+    document.getElementById("signupTitle").innerText =
+      "कस्टमर साइनअप";
+
+    document.getElementById("email").placeholder =
+      "ईमेल";
+
+    document.getElementById("password").placeholder =
+      "पासवर्ड";
+
+    document.getElementById("name").placeholder =
+      "पूरा नाम";
+
+    document.getElementById("signupEmail").placeholder =
+      "ईमेल";
+
+    document.getElementById("phone").placeholder =
+      "मोबाइल नंबर";
+
+    document.getElementById("signupPassword").placeholder =
+      "पासवर्ड बनाएं";
+
+    document.getElementById("loginBtn").innerText =
+      "लॉगिन";
+
+    document.getElementById("signupBtn").innerText =
+      "साइनअप";
+
+    document.getElementById("newCustomerText").innerHTML =
+      'नए कस्टमर? <a href="#" onclick="showSignup()">अकाउंट बनाएं</a>';
+
+    document.getElementById("alreadyAccountText").innerHTML =
+      'पहले से अकाउंट है? <a href="#" onclick="hideSignup()">लॉगिन</a>';
+  }
+
+  else {
+
+    location.reload();
+  }
+}

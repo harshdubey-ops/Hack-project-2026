@@ -1,98 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Farmer Login & Signup</title>
+  <title>Customer Login</title>
 
+  <!-- CSS -->
   <link rel="stylesheet" href="customer-login.css">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
 
+  <!-- Language Toggle -->
+  <div class="language-toggle">
+    <button onclick="setLanguage('en')">English</button>
+    <button onclick="setLanguage('hi')">हिंदी</button>
+  </div>
+
   <div class="container">
 
-    <!-- LEFT -->
-    <div class="left-section">
+    <!-- LOGIN -->
+    <div class="box" id="loginBox">
 
-      <div class="overlay"></div>
+      <h1 id="loginTitle">Customer Login</h1>
 
-      <div class="left-content">
-
-        <h1 id="welcomeText">
-        Welcome Customer 👨‍🌾
-        </h1>
-
-        <p id="subText">
-        Manage your crops, orders and farming business easily.
-        </p>
-
+      <div class="input-box">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="email" placeholder="Email">
       </div>
+
+      <div class="input-box">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="password" placeholder="Password">
+      </div>
+
+      <button onclick="loginCustomer()" id="loginBtn">
+        Login
+      </button>
+
+      <p id="newCustomerText">
+        New Customer?
+        <a href="#" onclick="showSignup()" id="createAccountText">
+          Create Account
+        </a>
+      </p>
 
     </div>
 
-    <!-- RIGHT -->
-    <div class="right-section">
 
-      <!-- Language Button -->
-      <div class="language-box">
-        <button onclick="toggleLanguage()" id="langBtn">
-          हिंदी
-        </button>
+    <!-- SIGNUP -->
+    <div class="box hidden" id="signupBox">
+
+      <h1 id="signupTitle">Customer Signup</h1>
+
+      <div class="input-box">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="name" placeholder="Full Name">
       </div>
 
-      <!-- FORM BOX -->
-      <div class="login-box">
+      <div class="input-box">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="signupEmail" placeholder="Email">
+      </div>
 
-        <!-- Tabs -->
-        <div class="tabs">
+      <div class="input-box">
+        <i class="fa-solid fa-phone"></i>
+        <input type="tel" id="phone" placeholder="Mobile Number">
+      </div>
 
-          <button class="tab active" id="loginTab"
-            onclick="showLogin()">
-            Login
-          </button>
+      <div class="input-box">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="signupPassword"
+          placeholder="Create Password">
+      </div>
 
-          <button class="tab" id="signupTab"
-            onclick="showSignup()">
-            Sign Up
-          </button>
+      <button onclick="signupCustomer()" id="signupBtn">
+        Signup
+      </button>
 
-        </div>
-
-        <h2 id="formTitle">Customer Login</h2>
-
-        <!-- SIGNUP NAME -->
-        <div class="input-group signup-field" id="nameField">
-          <input type="text" id="name"
-            placeholder="Full Name">
-        </div>
-
-        <!-- EMAIL -->
-        <div class="input-group">
-          <input type="email" id="email"
-            placeholder="Email Address">
-        </div>
-
-        <!-- PASSWORD -->
-        <div class="input-group">
-          <input type="password" id="password"
-            placeholder="Password">
-        </div>
-
-        <!-- BUTTON -->
-        <button class="login-btn"
-          id="mainBtn"
-          onclick="submitForm()">
-
+      <p id="alreadyAccountText">
+        Already have an account?
+        <a href="#" onclick="hideSignup()" id="loginLinkText">
           Login
-
-        </button>
-
-      </div>
+        </a>
+      </p>
 
     </div>
 
@@ -101,4 +98,5 @@
   <script src="customer-login.js"></script>
 
 </body>
+
 </html>
