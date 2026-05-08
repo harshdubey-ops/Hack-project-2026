@@ -6,148 +6,190 @@
 
   <title>Fasal Junction</title>
 
-  <link rel="stylesheet" href="Style.css">
-
-  <style>
-    .language-buttons{
-      margin-top:10px;
-    }
-
-    .language-buttons button{
-      padding:8px 15px;
-      margin:5px;
-      cursor:pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+  <!-- Navbar -->
   <nav>
+
     <h1 id="title">🌾 Fasal Junction</h1>
 
     <div>
-      <a href="../farmer login/farmer-login.html">
-        <button id="farmerBtn">Farmer Login</button>
+      <a href="">
+      <button id="farmerBtn">Farmer Login</button>
       </a>
 
-      <a href="../customer login/customer-login.html">
-        <button id="customerBtn">Customer Login</button>
+      <a>
+      <button id="customerBtn">Customer Login</button>
       </a>
     </div>
+
   </nav>
 
   <!-- Language Buttons -->
-  <div class="language-buttons" align="center">
+  <div class="language-buttons">
+
     <button onclick="setEnglish()">English</button>
+
     <button onclick="setHindi()">हिन्दी</button>
+
   </div>
 
+  <!-- Hero Section -->
   <section class="hero">
 
     <h2 id="heroTitle">Fresh From Farm To Home</h2>
 
     <p id="heroText">
-      Buy fresh products directly from farmers.
+      Buy fresh vegetables directly from farmers.
     </p>
 
-    <input type="text" id="searchBox" placeholder="Search Products">
+    <input type="text" id="searchBox"
+    placeholder="Search Products">
 
     <button id="searchBtn">Search</button>
 
   </section>
 
+  <!-- Products -->
   <section class="products">
 
+    <!-- Tomato -->
     <div class="card">
 
-      <img src="https://via.placeholder.com/250" alt="product">
+      <img src="https://images.unsplash.com/photo-1546094096-0df4bcaaa337" alt="Tomato">
 
-      <h3 id="productName">Fresh Tomatoes</h3>
+      <h3 class="product-name"
+      data-en="Fresh Tomatoes"
+      data-hi="ताज़े टमाटर">
+      Fresh Tomatoes
+      </h3>
 
-      <p id="price">₹40/kg</p>
+      <p>₹40/kg</p>
 
-      <button onclick="addToCart()" id="cartBtn">
-        Add To Cart
+      <button class="cart-btn"
+      data-en="Add To Cart"
+      data-hi="कार्ट में जोड़ें"
+      onclick="addToCart()">
+      Add To Cart
+      </button>
+
+    </div>
+
+    <!-- Potato -->
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655" alt="Potato">
+
+      <h3 class="product-name"
+      data-en="Fresh Potatoes"
+      data-hi="ताज़े आलू">
+      Fresh Potatoes
+      </h3>
+
+      <p>₹30/kg</p>
+
+      <button class="cart-btn"
+      data-en="Add To Cart"
+      data-hi="कार्ट में जोड़ें"
+      onclick="addToCart()">
+      Add To Cart
+      </button>
+
+    </div>
+
+    <!-- Onion -->
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1508747703725-719777637510" alt="Onion">
+
+      <h3 class="product-name"
+      data-en="Fresh Onions"
+      data-hi="ताज़े प्याज">
+      Fresh Onions
+      </h3>
+
+      <p>₹35/kg</p>
+
+      <button class="cart-btn"
+      data-en="Add To Cart"
+      data-hi="कार्ट में जोड़ें"
+      onclick="addToCart()">
+      Add To Cart
+      </button>
+
+    </div>
+
+    <!-- Carrot -->
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1447175008436-054170c2e979" alt="Carrot">
+
+      <h3 class="product-name"
+      data-en="Fresh Carrots"
+      data-hi="ताज़ी गाजर">
+      Fresh Carrots
+      </h3>
+
+      <p>₹50/kg</p>
+
+      <button class="cart-btn"
+      data-en="Add To Cart"
+      data-hi="कार्ट में जोड़ें"
+      onclick="addToCart()">
+      Add To Cart
       </button>
 
     </div>
 
   </section>
 
-  <script>
+  <!-- Footer -->
+  <footer>
 
-    function setEnglish(){
+    <div class="footer-container">
 
-      document.getElementById("title").innerHTML =
-      "🌾 Fasal Junction";
+      <div>
+        <h3>🌾 Fasal Junction</h3>
 
-      document.getElementById("farmerBtn").innerHTML =
-      "Farmer Login";
+        <p>
+          Fresh vegetables directly from farmers to your home.
+        </p>
+      </div>
 
-      document.getElementById("customerBtn").innerHTML =
-      "Customer Login";
+      <div>
+        <h3>Quick Links</h3>
 
-      document.getElementById("heroTitle").innerHTML =
-      "Fresh From Farm To Home";
+        <p>Home</p>
+        <p>Products</p>
+        <p>Contact</p>
+        <p>About Us</p>
+      </div>
 
-      document.getElementById("heroText").innerHTML =
-      "Buy fresh products directly from farmers.";
+      <div>
+        <h3>Help & Support</h3>
 
-      document.getElementById("searchBox").placeholder =
-      "Search Products";
+        <p>Email: support@fasaljunction.com</p>
 
-      document.getElementById("searchBtn").innerHTML =
-      "Search";
+        <p>Phone: +91 9876543210</p>
 
-      document.getElementById("productName").innerHTML =
-      "Fresh Tomatoes";
+        <input type="email"
+        placeholder="Enter your email">
 
-      document.getElementById("price").innerHTML =
-      "₹40/kg";
+        <button>Subscribe</button>
+      </div>
 
-      document.getElementById("cartBtn").innerHTML =
-      "Add To Cart";
-    }
+    </div>
 
-    function setHindi(){
+    <div class="copyright">
+      © 2026 Fasal Junction | All Rights Reserved
+    </div>
 
-      document.getElementById("title").innerHTML =
-      "🌾 फसल जंक्शन";
+  </footer>
 
-      document.getElementById("farmerBtn").innerHTML =
-      "किसान लॉगिन";
-
-      document.getElementById("customerBtn").innerHTML =
-      "ग्राहक लॉगिन";
-
-      document.getElementById("heroTitle").innerHTML =
-      "खेत से सीधे आपके घर तक";
-
-      document.getElementById("heroText").innerHTML =
-      "किसानों से सीधे ताज़े उत्पाद खरीदें।";
-
-      document.getElementById("searchBox").placeholder =
-      "उत्पाद खोजें";
-
-      document.getElementById("searchBtn").innerHTML =
-      "खोजें";
-
-      document.getElementById("productName").innerHTML =
-      "ताज़े टमाटर";
-
-      document.getElementById("price").innerHTML =
-      "₹40/किलो";
-
-      document.getElementById("cartBtn").innerHTML =
-      "कार्ट में जोड़ें";
-    }
-
-    function addToCart(){
-      alert("Product Added To Cart!");
-    }
-
-  </script>
+  <script src="script.js"></script>
 
 </body>
 </html>
