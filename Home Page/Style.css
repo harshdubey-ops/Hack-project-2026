@@ -5,8 +5,23 @@
   font-family:Arial, sans-serif;
 }
 
-body{
-  background:#f4f7f2;
+.language-buttons{
+      margin-top:10px;
+    }
+
+    .language-buttons button{
+      padding:8px 15px;
+      margin:5px;
+      cursor:pointer;
+    }
+
+nav {
+  background: green;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Navbar */

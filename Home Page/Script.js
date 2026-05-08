@@ -4,84 +4,74 @@ function addToCart(){
 
 }
 
-/* English Language */
+// hindi and english language toggle functions
 
-function setEnglish(){
+ function setEnglish(){
 
-  document.getElementById("title").innerHTML =
-  "🌾 Fasal Junction";
+      document.getElementById("title").innerHTML =
+      "🌾 Fasal Junction";
 
-  document.getElementById("farmerBtn").innerHTML =
-  "Farmer Login";
+      document.getElementById("farmerBtn").innerHTML =
+      "Farmer Login";
 
-  document.getElementById("customerBtn").innerHTML =
-  "Customer Login";
+      document.getElementById("customerBtn").innerHTML =
+      "Customer Login";
 
-  document.getElementById("heroTitle").innerHTML =
-  "Fresh From Farm To Home";
+      document.getElementById("heroTitle").innerHTML =
+      "Fresh From Farm To Home";
 
-  document.getElementById("heroText").innerHTML =
-  "Buy fresh vegetables directly from farmers.";
+      document.getElementById("heroText").innerHTML =
+      "Buy fresh products directly from farmers.";
 
-  document.getElementById("searchBox").placeholder =
-  "Search Products";
+      document.getElementById("searchBox").placeholder =
+      "Search Products";
 
-  document.getElementById("searchBtn").innerHTML =
-  "Search";
+      document.getElementById("searchBtn").innerHTML =
+      "Search";
 
-  let products =
-  document.querySelectorAll(".product-name");
+      document.getElementById("productName").innerHTML =
+      "Fresh Tomatoes";
 
-  products.forEach((item)=>{
-    item.innerHTML = item.dataset.en;
-  });
+      document.getElementById("price").innerHTML =
+      "₹40/kg";
 
-  let buttons =
-  document.querySelectorAll(".cart-btn");
+      document.getElementById("cartBtn").innerHTML =
+      "Add To Cart";
+    }
 
-  buttons.forEach((btn)=>{
-    btn.innerHTML = btn.dataset.en;
-  });
+    function setHindi(){
 
-}
+      document.getElementById("title").innerHTML =
+      "🌾 फसल जंक्शन";
 
-/* Hindi Language */
+      document.getElementById("farmerBtn").innerHTML =
+      "किसान लॉगिन";
 
-function setHindi(){
+      document.getElementById("customerBtn").innerHTML =
+      "ग्राहक लॉगिन";
 
-  document.getElementById("title").innerHTML =
-  "🌾 फसल जंक्शन";
+      document.getElementById("heroTitle").innerHTML =
+      "खेत से सीधे आपके घर तक";
 
-  document.getElementById("farmerBtn").innerHTML =
-  "किसान लॉगिन";
+      document.getElementById("heroText").innerHTML =
+      "किसानों से सीधे ताज़े उत्पाद खरीदें।";
 
-  document.getElementById("customerBtn").innerHTML =
-  "ग्राहक लॉगिन";
+      document.getElementById("searchBox").placeholder =
+      "उत्पाद खोजें";
 
-  document.getElementById("heroTitle").innerHTML =
-  "खेत से सीधे आपके घर तक";
+      document.getElementById("searchBtn").innerHTML =
+      "खोजें";
 
-  document.getElementById("heroText").innerHTML =
-  "किसानों से सीधे ताज़ी सब्जियां खरीदें।";
+      document.getElementById("productName").innerHTML =
+      "ताज़े टमाटर";
 
-  document.getElementById("searchBox").placeholder =
-  "उत्पाद खोजें";
+      document.getElementById("price").innerHTML =
+      "₹40/किलो";
 
-  document.getElementById("searchBtn").innerHTML =
-  "खोजें";
+      document.getElementById("cartBtn").innerHTML =
+      "कार्ट में जोड़ें";
+    }
 
-  let products =
-  document.querySelectorAll(".product-name");
-
-  products.forEach((item)=>{
-    item.innerHTML = item.dataset.hi;
-  });
-
-  let buttons =
-  document.querySelectorAll(".cart-btn");
-
-  buttons.forEach((btn)=>{
-    btn.innerHTML = btn.dataset.hi;
-  });
-
-}
+    function addToCart(){
+      alert("Product Added To Cart!");
+    }
