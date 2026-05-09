@@ -1,15 +1,55 @@
-// farmer-login.js
+/* ****************************farmer-login.js*********************** */
+
+/* login page */
 
 function loginFarmer() {
   alert("Login Successful");
 }
 
+// Generate OTP
+
+function generateOTP() {
+
+  let otp = Math.floor(100000 + Math.random() * 900000);
+
+  alert("Your OTP is: " + otp);
+
+  localStorage.setItem("generatedOTP", otp);
+}
+
+
+// Verify Email
+
+function verifyEmail() {
+
+  let email = document.getElementById("signupEmail").value;
+
+  if (email === "") {
+
+    alert("Please enter email first");
+  }
+
+  else {
+
+    alert("Email Verified Successfully");
+  }
+}
+
+
+/* sign-up page */
+
 function signupFarmer() {
-  if(document.getElementById("signupPassword").value !== document.getElementById("reEnterPassword").value) {
+  if(document.getElementById("otp").value !== localStorage.getItem("generatedOTP")) {
+    alert("Invalid OTP");
+    return;
+  }
+  else if(document.getElementById("signupPassword").value !== document.getElementById("reEnterPassword").value) {
     alert("Passwords do not match");
     return;
   }
+  else {
   alert("Signup Successful");
+}
 }
 
 /* Animated Switch */

@@ -30,23 +30,35 @@
 
       <h1 id="loginTitle">Farmer Login</h1>
 
+      <!-- Email -->
       <div class="input-box">
         <i class="fa-solid fa-envelope"></i>
-        <input type="email" id="email" placeholder="Email">
+
+        <input type="email"
+               id="email"
+               placeholder="Email">
       </div>
 
+      <!-- Password -->
       <div class="input-box">
         <i class="fa-solid fa-lock"></i>
-        <input type="password" id="password" placeholder="Password">
+
+        <input type="password"
+               id="password"
+               placeholder="Password">
       </div>
 
-      <button onclick="loginFarmer()" id="loginBtn">
+      <button onclick="loginFarmer()"
+              id="loginBtn">
         Login
       </button>
 
       <p id="newFarmerText">
         New Farmer?
-        <a href="#" onclick="showSignup()" id="createAccountText">
+
+        <a href="#"
+           onclick="showSignup()"
+           id="createAccountText">
           Create Account
         </a>
       </p>
@@ -59,40 +71,91 @@
 
       <h1 id="signupTitle">Farmer Signup</h1>
 
+      <!-- Name -->
       <div class="input-box">
         <i class="fa-solid fa-user"></i>
-        <input type="text" id="name" placeholder="Full Name">
+
+        <input type="text"
+               id="name"
+               placeholder="Full Name">
       </div>
 
+
+      <!-- Email + Verify -->
       <div class="input-box">
+
         <i class="fa-solid fa-envelope"></i>
-        <input type="email" id="signupEmail" placeholder="Email">
+
+        <input type="email"
+               id="signupEmail"
+               placeholder="Email">
+
+        <button class="small-btn"
+                onclick="verifyEmail()">
+          Verify
+        </button>
+
       </div>
 
+
+      <!-- Phone + OTP -->
       <div class="input-box">
+
         <i class="fa-solid fa-phone"></i>
-        <input type="tel" id="phone" placeholder="Mobile Number">
+
+        <input type="tel"
+               id="phone"
+               placeholder="Mobile Number">
+
+        <button class="small-btn"
+                onclick="generateOTP()">
+          OTP
+        </button>
+
       </div>
 
+
+      <!-- Small OTP Box -->
+      <div class="otp-container">
+
+        <input type="text"
+               maxlength="6"
+               id="otp"
+               placeholder="Enter OTP">
+
+      </div>
+
+
+      <!-- Password -->
       <div class="input-box">
         <i class="fa-solid fa-lock"></i>
-        <input type="password" id="signupPassword"
-          placeholder="Create Password">
+
+        <input type="password"
+               id="signupPassword"
+               placeholder="Create Password">
       </div>
 
+
+      <!-- Re-enter Password -->
       <div class="input-box">
         <i class="fa-solid fa-lock"></i>
-        <input type="password" id="reEnterPassword"
-          placeholder="Re-Enter Password">
+
+        <input type="password"
+               id="reEnterPassword"
+               placeholder="Re-Enter Password">
       </div>
 
-      <button onclick="signupFarmer()" id="signupBtn">
+
+      <button onclick="signupFarmer()"
+              id="signupBtn">
         Signup
       </button>
 
       <p id="alreadyAccountText">
         Already have an account?
-        <a href="#" onclick="hideSignup()" id="loginLinkText">
+
+        <a href="#"
+           onclick="hideSignup()">
           Login
         </a>
       </p>

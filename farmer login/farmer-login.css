@@ -19,7 +19,9 @@ body {
   background: linear-gradient(135deg, #dcedc8, #a5d6a7);
 }
 
-/* Language Buttons Fix */
+/* =========================
+   LANGUAGE TOGGLE
+========================= */
 
 .language-toggle {
   position: fixed;
@@ -33,7 +35,6 @@ body {
   z-index: 1000;
 }
 
-/* ONLY language buttons */
 .language-toggle button {
 
   width: auto;
@@ -58,14 +59,18 @@ body {
   transform: scale(1.05);
 }
 
-/* Container */
+/* =========================
+   CONTAINER
+========================= */
 
 .container {
   width: 350px;
   position: relative;
 }
 
-/* Box */
+/* =========================
+   BOX
+========================= */
 
 .box {
   background: white;
@@ -79,7 +84,9 @@ body {
   animation: fadeSlide 0.5s ease;
 }
 
-/* Animation */
+/* =========================
+   ANIMATION
+========================= */
 
 @keyframes fadeSlide {
 
@@ -98,6 +105,10 @@ body {
   display: none;
 }
 
+/* =========================
+   TITLE
+========================= */
+
 h1 {
   text-align: center;
   color: #2e7d32;
@@ -105,12 +116,16 @@ h1 {
   margin-bottom: 25px;
 }
 
-/* Input */
+/* =========================
+   INPUT BOX
+========================= */
 
 .input-box {
   position: relative;
   margin-bottom: 18px;
 }
+
+/* Icons */
 
 .input-box i {
   position: absolute;
@@ -121,18 +136,93 @@ h1 {
   color: #2e7d32;
 }
 
+/* Inputs */
+
 .input-box input {
   width: 100%;
 
-  padding: 12px 12px 12px 40px;
+  padding: 12px 85px 12px 40px;
 
   border: 1px solid #ccc;
   border-radius: 10px;
 
   font-size: 15px;
+
+  outline: none;
 }
 
-/* Button */
+.input-box input:focus {
+  border-color: #43a047;
+}
+
+/* =========================
+   SMALL SIDE BUTTONS
+========================= */
+
+.small-btn {
+
+  position: absolute;
+
+  right: 5px;
+  top: 5px;
+
+  width: auto;
+
+  padding: 7px 12px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #2e7d32;
+  color: white;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.small-btn:hover {
+  background: #1b5e20;
+}
+
+/* =========================
+   OTP BOX
+========================= */
+
+.otp-container {
+  display: flex;
+  justify-content: center;
+
+  margin-bottom: 18px;
+}
+
+.otp-container input {
+
+  width: 150px;
+
+  padding: 10px;
+
+  text-align: center;
+
+  border: 1px solid #ccc;
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  letter-spacing: 3px;
+
+  outline: none;
+}
+
+.otp-container input:focus {
+  border-color: #43a047;
+}
+
+/* =========================
+   MAIN BUTTON
+========================= */
 
 button {
   width: 100%;
@@ -155,6 +245,10 @@ button:hover {
   background: #2e7d32;
   transform: scale(1.02);
 }
+
+/* =========================
+   TEXT
+========================= */
 
 p {
   margin-top: 18px;
