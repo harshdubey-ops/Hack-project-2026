@@ -1,25 +1,71 @@
-// customer-login.js
+/* **************************** customer-login.js **************************** */
+
+/* Login Page */
 
 function loginCustomer() {
-  alert("Login Successful");
+  alert("Customer Login Successful");
 }
 
+/* Generate OTP */
+
+function generateOTP() {
+
+  let otp = Math.floor(100000 + Math.random() * 900000);
+
+  alert("Your OTP is: " + otp);
+
+  localStorage.setItem("generatedOTP", otp);
+}
+
+/* Verify Email */
+
+function verifyEmail() {
+
+  let email = document.getElementById("signupEmail").value;
+
+  if (email === "") {
+
+    alert("Please enter email first");
+  }
+
+  else {
+
+    alert("Email Verified Successfully");
+  }
+}
+
+/* Signup Page */
+
 function signupCustomer() {
+
+  let enteredOTP =
+    document.getElementById("otp").value;
+
+  let savedOTP =
+    localStorage.getItem("generatedOTP");
 
   let password =
     document.getElementById("signupPassword").value;
 
-  let rePassword =
+  let confirmPassword =
     document.getElementById("reEnterPassword").value;
 
-  // Password Match Check
-  if (password !== rePassword) {
+  if (enteredOTP !== savedOTP) {
+
+    alert("Invalid OTP");
+    return;
+  }
+
+  else if (password !== confirmPassword) {
 
     alert("Passwords do not match");
     return;
   }
 
-  alert("Signup Successful");
+  else {
+
+    alert("Customer Signup Successful");
+  }
 }
 
 /* Animated Switch */
@@ -48,17 +94,23 @@ function setLanguage(lang) {
 
   if (lang === "hi") {
 
+    /* Titles */
+
     document.getElementById("loginTitle").innerText =
-      "कस्टमर लॉगिन";
+      "ग्राहक लॉगिन";
 
     document.getElementById("signupTitle").innerText =
-      "कस्टमर साइनअप";
+      "ग्राहक साइनअप";
+
+    /* Login Placeholders */
 
     document.getElementById("email").placeholder =
       "ईमेल";
 
     document.getElementById("password").placeholder =
       "पासवर्ड";
+
+    /* Signup Placeholders */
 
     document.getElementById("name").placeholder =
       "पूरा नाम";
@@ -69,11 +121,19 @@ function setLanguage(lang) {
     document.getElementById("phone").placeholder =
       "मोबाइल नंबर";
 
+    document.getElementById("otp").placeholder =
+      "OTP डालें";
+
+    document.getElementById("address").placeholder =
+      "पता";
+
     document.getElementById("signupPassword").placeholder =
       "पासवर्ड बनाएं";
 
     document.getElementById("reEnterPassword").placeholder =
-      "पासवर्ड फिर से दर्ज करें";
+      "पासवर्ड की पुष्टि करें";
+
+    /* Buttons */
 
     document.getElementById("loginBtn").innerText =
       "लॉगिन";
@@ -81,8 +141,10 @@ function setLanguage(lang) {
     document.getElementById("signupBtn").innerText =
       "साइनअप";
 
+    /* Text */
+
     document.getElementById("newCustomerText").innerHTML =
-      'नए कस्टमर? <a href="#" onclick="showSignup()">अकाउंट बनाएं</a>';
+      'नए ग्राहक? <a href="#" onclick="showSignup()">अकाउंट बनाएं</a>';
 
     document.getElementById("alreadyAccountText").innerHTML =
       'पहले से अकाउंट है? <a href="#" onclick="hideSignup()">लॉगिन</a>';
