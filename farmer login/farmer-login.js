@@ -5,6 +5,10 @@ function loginFarmer() {
 }
 
 function signupFarmer() {
+  if(document.getElementById("signupPassword").value !== document.getElementById("reEnterPassword").value) {
+    alert("Passwords do not match");
+    return;
+  }
   alert("Signup Successful");
 }
 
