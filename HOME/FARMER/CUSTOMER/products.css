@@ -6,7 +6,7 @@ body{font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:
 .site-header .wrap{display:flex;align-items:center;justify-content:space-between}
 .site-header h1{margin:12px 0}
 .site-header nav a{color:#fff;margin-left:12px;text-decoration:none}
-.controls{margin:18px 0}
+.controls{margin:18px 0;background:var(--card-bg);padding:16px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
 #searchInput{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .filters input{padding:10px 12px;border:1px solid #ddd;border-radius:6px;flex:1;min-width:130px}

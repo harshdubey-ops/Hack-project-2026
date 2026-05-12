@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const { createProduct, getMyProducts, getAllProducts } = require('../controllers/productController');
+const {
+	createProduct,
+	getMyProducts,
+	getAllProducts,
+	updateProduct,
+	deleteProduct
+} = require('../controllers/productController');
 const multer = require('multer');
 const path = require('path');
 

@@ -1,10 +1,15 @@
 (function(){
   const API_BASE = 'http://localhost:5000/api/products';
+  // Same host as API so /uploads/... resolves when the page is opened from another origin (e.g. Live Server).
+  const API_ORIGIN = (function () {
+    try { return new URL(API_BASE).origin; } catch (e) { return 'http://localhost:5000'; }
+  })();
   const grid = document.getElementById('productsGrid');
   const searchInput = document.getElementById('searchInput');
   const minPriceInput = document.getElementById('minPrice');
   const maxPriceInput = document.getElementById('maxPrice');
   const categoryFilter = document.getElementById('categoryFilter');
+  const ownerFilter = document.getElementById('ownerFilter');
   const locationFilter = document.getElementById('locationFilter');
   const clearFiltersBtn = document.getElementById('clearFilters');
   const prevBtn = document.getElementById('prevPage');
@@ -14,13 +19,23 @@
 
   let state = { page: 1, limit: parseInt(pageSizeSel.value, 10), totalPages: 1, total: 0 };
 
+  // Fewer requests while typing in search / filters (server already does the heavy lifting).
+  function debounce(fn, ms) {
+    let t;
+    return function () {
+      clearTimeout(t);
+      const args = arguments;
+      t = setTimeout(function () { fn.apply(null, args); }, ms);
+    };
+  }
+
   function makeCard(p){
     const card = document.createElement('article');
     card.className = 'card';
 
     const img = document.createElement('img');
     let src = p.image || '';
-    if(src.startsWith('/uploads')) src = window.location.origin + src;
+    if (src.startsWith('/uploads')) src = API_ORIGIN + src;
     img.src = src || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="100%" height="100%" fill="%23eee"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999" font-family="Arial" font-size="20">No image</text></svg>';
     img.alt = p.name || 'product image';
 
@@ -60,11 +75,13 @@
     const minPrice = (minPriceInput.value || '').trim();
     const maxPrice = (maxPriceInput.value || '').trim();
     const category = (categoryFilter.value || '').trim();
+    const owner = (ownerFilter && ownerFilter.value || '').trim();
     const location = (locationFilter.value || '').trim();
     let url = `${API_BASE}?page=${state.page}&limit=${state.limit}&q=${encodeURIComponent(q)}`;
     if (minPrice) url += `&minPrice=${encodeURIComponent(minPrice)}`;
     if (maxPrice) url += `&maxPrice=${encodeURIComponent(maxPrice)}`;
     if (category) url += `&category=${encodeURIComponent(category)}`;
+    if (owner) url += `&owner=${encodeURIComponent(owner)}`;
     if (location) url += `&location=${encodeURIComponent(location)}`;
     try{
       const res = await fetch(url, {cache: 'no-store'});
@@ -79,10 +96,20 @@
       const local = localStorage.getItem('localProducts');
       const arr = local ? JSON.parse(local) : [];
       let filtered = arr;
-      if (q) filtered = filtered.filter(p => (p.name||'').toLowerCase().includes(q.toLowerCase()));
+      if (q) filtered = filtered.filter(function (p) {
+        const hay = ((p.name || '') + ' ' + (p.notes || '')).toLowerCase();
+        return hay.includes(q.toLowerCase());
+      });
       if (minPrice) filtered = filtered.filter(p => p.price >= parseFloat(minPrice));
       if (maxPrice) filtered = filtered.filter(p => p.price <= parseFloat(maxPrice));
       if (category) filtered = filtered.filter(p => (p.category||'').toLowerCase().includes(category.toLowerCase()));
+      if (owner) {
+        const o = owner.toLowerCase();
+        filtered = filtered.filter(function (p) {
+          const n = (p.ownerId && p.ownerId.name) || p.ownerName || '';
+          return String(n).toLowerCase().includes(o);
+        });
+      }
       if (location) filtered = filtered.filter(p => (p.location||'').toLowerCase().includes(location.toLowerCase()));
       state.total = filtered.length;
       state.totalPages = Math.max(1, Math.ceil(state.total / state.limit));
@@ -112,16 +139,19 @@
     await fetchPage();
   });
 
-  searchInput.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
+  const scheduleFetch = debounce(function () { state.page = 1; fetchPage(); }, 320);
+  searchInput.addEventListener('input', scheduleFetch);
+  categoryFilter.addEventListener('input', scheduleFetch);
+  if (ownerFilter) ownerFilter.addEventListener('input', scheduleFetch);
+  locationFilter.addEventListener('input', scheduleFetch);
   minPriceInput.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
   maxPriceInput.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
-  categoryFilter.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
-  locationFilter.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
   clearFiltersBtn.addEventListener('click', ()=>{
     searchInput.value = '';
     minPriceInput.value = '';
     maxPriceInput.value = '';
     categoryFilter.value = '';
+    if (ownerFilter) ownerFilter.value = '';
     locationFilter.value = '';
     state.page = 1;
     fetchPage();

@@ -96,7 +96,13 @@ exports.getAllProducts = async (req, res) => {
     const owner = (req.query.owner || '').trim();
 
     const filter = {};
-    if (q) filter.name = { $regex: q, $options: 'i' };
+    // Search product name and notes (case-insensitive)
+    if (q) {
+      filter.$or = [
+        { name: { $regex: q, $options: 'i' } },
+        { notes: { $regex: q, $options: 'i' } }
+      ];
+    }
     if (minPrice !== null && !isNaN(minPrice)) filter.price = { ...filter.price, $gte: minPrice };
     if (maxPrice !== null && !isNaN(maxPrice)) filter.price = { ...filter.price, $lte: maxPrice };
     if (category) filter.category = { $regex: category, $options: 'i' };
