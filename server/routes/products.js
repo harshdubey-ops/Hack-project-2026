@@ -29,6 +29,8 @@ const upload = multer({ storage, fileFilter, limits: { fileSize: 2 * 1024 * 1024
 // POST with optional image file field name 'image'
 router.post('/', auth, upload.single('image'), createProduct);
 router.get('/mine', auth, getMyProducts);
+router.put('/:id', auth, upload.single('image'), updateProduct);
+router.delete('/:id', auth, deleteProduct);
 router.get('/', getAllProducts);
 
 module.exports = router;
