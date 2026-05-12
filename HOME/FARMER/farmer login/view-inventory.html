@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Inventory - Farmer Dashboard</title>
+  <link rel="stylesheet" href="farmer-dashboard.css">
+</head>
+<body>
+  <div class="dash-container">
+    <header>
+      <h1>Your Inventory</h1>
+      <div class="actions">
+        <a href="farmer-dashboard.html">Back to Dashboard</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="inventory">
+        <div id="dashboardStatus" class="dashboard-status">Loading inventory...</div>
+        <div id="productList" class="product-list"></div>
+      </section>
+    </main>
+  </div>
+
+<script>
+  // Farmer inventory view (client-side)
+
+  const API_BASE = 'http://localhost:5000/api';
+
+  function getProductsLocal() {
+    try { return JSON.parse(localStorage.getItem('localProducts') || '[]'); } catch (e) { return []; }
+  }
+  function saveProductsLocal(products) { localStorage.setItem('localProducts', JSON.stringify(products)); }
+
+  function getCurrentUser() {
+    return JSON.parse(localStorage.getItem('currentUser') || 'null');
+  }
+
+  // UI helpers
+  function el(tag, cls) { const d = document.createElement(tag); if (cls) d.className = cls; return d; }
+
+  let currentInventory = [];
+  let statusEl = null;
+
+  function setStatus(message, isError = false) {
+    if (!statusEl) statusEl = document.getElementById('dashboardStatus');
+    if (!statusEl) return;
+    statusEl.textContent = message;
+    statusEl.classList.toggle('error', isError);
+  }
+
+  function ownsProduct(product, userId) {
+    return product.ownerId === userId || (product.ownerId && product.ownerId._id === userId);
+  }
+
+  function renderProducts(products) {
+    const user = getCurrentUser();
+    const list = document.getElementById('productList');
+    list.innerHTML = '';
+    if (!user) return;
+    const all = products || getProductsLocal().filter(p => ownsProduct(p, user.id));
+    if (all.length === 0) {
+      const p = el('p'); p.innerText = 'No products yet.'; list.appendChild(p); return;
+    }
+    all.forEach(p => {
+      const card = el('div', 'product-card');
+      const img = el('img'); img.src = p.image || 'https://via.placeholder.com/160x100?text=No+Image';
+      img.alt = p.name;
+      card.appendChild(img);
+      const name = el('h4'); name.innerText = p.name; card.appendChild(name);
+      const meta = el('p');
+      const details = [`₹${p.price} / kg`, `${p.quantity} kg`];
+      if (p.category) details.push(p.category);
+      if (p.location) details.push(p.location);
+      meta.innerText = details.join(' • ');
+      card.appendChild(meta);
+      const notes = el('p'); notes.innerText = p.notes || ''; notes.className = 'notes'; card.appendChild(notes);
+
+      const actions = el('div', 'card-actions');
+      const editBtn = el('button', 'edit-btn');
+      editBtn.type = 'button';
+      editBtn.innerText = 'Edit';
+      editBtn.addEventListener('click', () => window.location.href = 'add-product.html?edit=' + (p._id || p.id));
+      const deleteBtn = el('button', 'delete-btn');
+      deleteBtn.type = 'button';
+      deleteBtn.innerText = 'Delete';
+      deleteBtn.addEventListener('click', () => confirmDeleteProduct(p._id || p.id));
+      actions.appendChild(editBtn);
+      actions.appendChild(deleteBtn);
+      card.appendChild(actions);
+
+      list.appendChild(card);
+    });
+  }
+
+  async function fetchMyProducts() {
+    const user = getCurrentUser();
+    if (!user) return getProductsLocal().filter(p => p.ownerId === user.id);
+
+    try {
+      const requestOptions = { method: 'GET', credentials: 'include' };
+      const res = window.fetchWithAuth
+        ? await fetchWithAuth(API_BASE + '/products/mine', requestOptions)
+        : await fetch(API_BASE + '/products/mine', requestOptions);
+
+      if (!res || !res.ok) {
+        throw new Error(`Server returned ${res ? res.status : 'no response'}`);
+      }
+
+      const data = await res.json();
+      const products = Array.isArray(data.products) ? data.products : [];
+      const localProducts = getProductsLocal().filter(p => !ownsProduct(p, user.id));
+      const normalized = products.map(p => ({
+        ...p,
+        ownerId: p.ownerId && p.ownerId._id ? p.ownerId : { _id: user.id, name: user.name }
+      }));
+      saveProductsLocal([...localProducts, ...normalized]);
+      return normalized;
+    } catch (err) {
+      console.warn('Failed to fetch farmer inventory from server:', err);
+      setStatus('Showing offline inventory. Server fetch failed.', true);
+    }
+
+    return getProductsLocal().filter(p => ownsProduct(p, user.id));
+  }
+
+  async function confirmDeleteProduct(productId) {
+    if (!productId) return;
+    if (!confirm('Delete this product from your inventory?')) return;
+    await deleteProduct(productId);
+    await loadInventory();
+  }
+
+  async function deleteProduct(id) {
+    try {
+      const requestOptions = { method: 'DELETE', credentials: 'include' };
+      const res = window.fetchWithAuth
+        ? await fetchWithAuth(`${API_BASE}/products/${id}`, requestOptions)
+        : await fetch(`${API_BASE}/products/${id}`, requestOptions);
+
+      if (res && res.ok) {
+        const all = getProductsLocal().filter(p => (p._id || p.id) !== id);
+        saveProductsLocal(all);
+        setStatus('Product deleted successfully.', false);
+        return;
+      }
+    } catch (err) {
+      console.warn('Delete failed, removing locally if possible:', err);
+    }
+
+    const all = getProductsLocal().filter(p => (p._id || p.id) !== id);
+    saveProductsLocal(all);
+    setStatus('Product removed locally.', true);
+  }
+
+  async function loadInventory() {
+    setStatus('Loading inventory...', false);
+    currentInventory = await fetchMyProducts();
+    renderProducts(currentInventory);
+    if (currentInventory.length === 0) {
+      setStatus('No products found. Add a product to get started.', false);
+    } else {
+      setStatus(`Loaded ${currentInventory.length} products.`, false);
+    }
+  }
+
+  // Load profile and inventory
+  async function loadProfile() {
+    try {
+      const meRes = (window.fetchWithAuth)
+        ? await fetchWithAuth(API_BASE + '/user/me')
+        : await fetch(API_BASE + '/user/me', { credentials: 'include' });
+      if (meRes && meRes.ok) {
+        const data = await meRes.json();
+        const u = data.user;
+        localStorage.setItem('currentUser', JSON.stringify({ id: u._id || u.id, name: u.name, email: u.email, role: u.role }));
+        return;
+      }
+    } catch (err) {
+      console.warn('Failed to fetch profile from server:', err);
+    }
+
+    const current = JSON.parse(localStorage.getItem('currentUser'));
+    if (!current) {
+      window.location.href = 'farmer-login.html';
+      return;
+    }
+  }
+
+  loadProfile();
+  loadInventory();
+</script>
+<script src="../../shared/authFetch.js"></script>
+</body>
+</html>

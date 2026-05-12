@@ -140,14 +140,13 @@ async function loginFarmer() {
     if (res.ok) {
       const data = await res.json();
       const user = data.user;
-         // auth cookies are set by server (httpOnly); avoid storing tokens in localStorage
-      localStorage.setItem('currentUser', JSON.stringify(user));
-         // auth cookies are set by server (httpOnly); avoid storing tokens in localStorage
+      localStorage.setItem('currentUser', JSON.stringify({ id: user._id || user.id, name: user.name, email: user.email, role: user.role }));
+      // auth cookies are set by server (httpOnly); avoid storing tokens in localStorage
       // role-based redirect
       if (user.role === 'farmer') {
         window.location.href = 'farmer-dashboard.html';
       } else {
-        // redirect to customer dashboard (relative path)
+        // redirect to customer dashboard
         window.location.href = '../../CUSTOMER/customer-dashboard.html';
       }
       return;

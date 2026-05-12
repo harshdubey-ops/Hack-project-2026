@@ -18,8 +18,30 @@
 
     <main>
       <section class="summary">
-        <h2>Your Dashboard (MVP)</h2>
-        <p>Browse products, add to cart, and contact farmers. UI coming soon.</p>
+        <h2>Fresh from Farmers</h2>
+        <p>Discover and buy fresh produce directly from local farmers.</p>
+        <div class="cart-link">
+          <a href="cart.html">View Cart (<span id="cartCount">0</span>)</a>
+        </div>
+      </section>
+
+      <section class="filters">
+        <input type="text" id="searchInput" placeholder="Search products...">
+        <select id="categoryFilter">
+          <option value="">All Categories</option>
+        </select>
+        <select id="locationFilter">
+          <option value="">All Locations</option>
+        </select>
+        <input type="number" id="minPrice" placeholder="Min Price">
+        <input type="number" id="maxPrice" placeholder="Max Price">
+        <button id="applyFilters">Apply Filters</button>
+      </section>
+
+      <section class="products">
+        <div id="productsList" class="products-grid">
+          <!-- Products will be loaded here -->
+        </div>
       </section>
     </main>
   </div>
@@ -27,6 +49,17 @@
 <script>
   async function init() {
     const API_BASE = 'http://localhost:5000/api';
+    
+    // Check localStorage first
+    const current = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (!current || current.role !== 'customer') {
+      window.location.href = 'customer login/customer-login.html';
+      return;
+    }
+    
+    document.getElementById('welcome').innerText = `Welcome, ${current.name}`;
+    
+    // Try to refresh profile from server
     try {
       const meRes = (window.fetchWithAuth)
         ? await fetchWithAuth(API_BASE + '/user/me')
@@ -34,23 +67,134 @@
       if (meRes && meRes.ok) {
         const data = await meRes.json();
         const u = data.user;
+        if (u.role !== 'customer') {
+          // User role mismatch
+          localStorage.removeItem('currentUser');
+          window.location.href = 'customer login/customer-login.html';
+          return;
+        }
         localStorage.setItem('currentUser', JSON.stringify({ id: u._id || u.id, name: u.name, email: u.email, role: u.role }));
         document.getElementById('welcome').innerText = `Welcome, ${u.name}`;
-        return;
       }
     } catch (e) {
-      // ignore and fallback
+      console.warn('Failed to refresh profile:', e);
+      // Keep using localStorage data
     }
-
-    const current = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    if (!current || current.role !== 'customer') {
-      window.location.href = 'customer login/customer-login.html';
-      return;
-    }
-    document.getElementById('welcome').innerText = `Welcome, ${current.name}`;
   }
 
-  init();
+  // Cart functions
+  function getCart() {
+    return JSON.parse(localStorage.getItem('cart') || '[]');
+  }
+  function saveCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+  }
+  function updateCartCount() {
+    const cart = getCart();
+    document.getElementById('cartCount').innerText = cart.length;
+  }
+
+  // Load products
+  async function loadProducts(filters = {}) {
+    const API_BASE = 'http://localhost:5000/api';
+    const query = new URLSearchParams(filters).toString();
+    try {
+      const res = await fetch(`${API_BASE}/products?${query}`);
+      if (res.ok) {
+        const data = await res.json();
+        renderProducts(data.products);
+        populateFilters(data.products);
+      } else {
+        renderProducts([]);
+      }
+    } catch (e) {
+      console.error('Failed to load products:', e);
+      renderProducts([]);
+    }
+  }
+
+  function renderProducts(products) {
+    const list = document.getElementById('productsList');
+    list.innerHTML = '';
+    if (products.length === 0) {
+      list.innerHTML = '<p>No products found.</p>';
+      return;
+    }
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <img src="${p.image || 'https://via.placeholder.com/200x150?text=No+Image'}" alt="${p.name}">
+        <h3>${p.name}</h3>
+        <p class="price">₹${p.price} / kg</p>
+        <p class="quantity">Available: ${p.quantity} kg</p>
+        <p class="farmer">By: ${p.ownerId?.name || 'Unknown Farmer'}</p>
+        ${p.category ? `<p class="category">${p.category}</p>` : ''}
+        ${p.location ? `<p class="location">${p.location}</p>` : ''}
+        <p class="notes">${p.notes || ''}</p>
+        <button class="add-to-cart" data-id="${p._id || p.id}">Add to Cart</button>
+      `;
+      list.appendChild(card);
+    });
+
+    // Add event listeners
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const productId = e.target.dataset.id;
+        const product = products.find(p => (p._id || p.id) === productId);
+        if (product) addToCart(product);
+      });
+    });
+  }
+
+  function populateFilters(products) {
+    const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
+    const locations = [...new Set(products.map(p => p.location).filter(Boolean))];
+
+    const catFilter = document.getElementById('categoryFilter');
+    catFilter.innerHTML = '<option value="">All Categories</option>';
+    categories.forEach(cat => {
+      catFilter.innerHTML += `<option value="${cat}">${cat}</option>`;
+    });
+
+    const locFilter = document.getElementById('locationFilter');
+    locFilter.innerHTML = '<option value="">All Locations</option>';
+    locations.forEach(loc => {
+      locFilter.innerHTML += `<option value="${loc}">${loc}</option>`;
+    });
+  }
+
+  function addToCart(product) {
+    const cart = getCart();
+    const existing = cart.find(item => item.productId === (product._id || product.id));
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({
+        productId: product._id || product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        farmer: product.ownerId?.name || 'Unknown',
+        quantity: 1
+      });
+    }
+    saveCart(cart);
+    alert('Added to cart!');
+  }
+
+  // Event listeners
+  document.getElementById('applyFilters').addEventListener('click', () => {
+    const filters = {
+      q: document.getElementById('searchInput').value,
+      category: document.getElementById('categoryFilter').value,
+      location: document.getElementById('locationFilter').value,
+      minPrice: document.getElementById('minPrice').value,
+      maxPrice: document.getElementById('maxPrice').value
+    };
+    loadProducts(filters);
+  });
 
   document.getElementById('logoutBtn').addEventListener('click', async () => {
     const API_BASE = 'http://localhost:5000/api';
@@ -59,8 +203,14 @@
       else await fetch(API_BASE + '/auth/logout', { method: 'POST', credentials: 'include' });
     } catch (e) { /* ignore */ }
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('cart');
     window.location.href = 'customer login/customer-login.html';
   });
+
+  // Init
+  init();
+  updateCartCount();
+  loadProducts();
 </script>
 </body>
 </html>

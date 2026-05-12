@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Product - Farmer Dashboard</title>
+  <link rel="stylesheet" href="farmer-dashboard.css">
+</head>
+<body>
+  <div class="dash-container">
+    <header>
+      <h1 id="pageTitle">Add New Product</h1>
+      <div class="actions">
+        <a href="farmer-dashboard.html">Back to Dashboard</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="add-product">
+        <h3>Product Details</h3>
+        <div class="form-row">
+          <label>Product Name</label>
+          <input id="prodName" type="text" placeholder="e.g. Fresh Tomatoes">
+        </div>
+        <div class="form-row">
+          <label>Price (₹/kg)</label>
+          <input id="prodPrice" type="number" placeholder="e.g. 40">
+        </div>
+        <div class="form-row">
+          <label>Quantity (kg)</label>
+          <input id="prodQty" type="number" placeholder="e.g. 100">
+        </div>
+        <div class="form-row">
+          <label>Image File (optional)</label>
+          <input id="prodImageFile" type="file" accept="image/*">
+          <small>Or provide an image URL below</small>
+        </div>
+        <div class="form-row">
+          <label>Preview</label>
+          <img id="prodPreview" class="preview hidden" alt="Image preview">
+        </div>
+        <div class="form-row">
+          <label>Image URL (optional)</label>
+          <input id="prodImage" type="text" placeholder="Optional image URL">
+        </div>
+        <div class="form-row">
+          <label>Notes</label>
+          <input id="prodNotes" type="text" placeholder="Optional notes">
+        </div>
+        <div class="form-row">
+          <label>Category</label>
+          <input id="prodCategory" type="text" placeholder="e.g. Vegetables, Fruits">
+        </div>
+        <div class="form-row">
+          <label>Location</label>
+          <input id="prodLocation" type="text" placeholder="e.g. Delhi, Farm Location">
+        </div>
+        <div class="form-actions">
+          <button id="saveProductBtn">Save Product</button>
+          <button id="cancelBtn">Cancel</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+  // Load profile and handle save
+  const API_BASE = 'http://localhost:5000/api';
+
+  async function loadProfile() {
+    try {
+      const meRes = (window.fetchWithAuth)
+        ? await fetchWithAuth(API_BASE + '/user/me')
+        : await fetch(API_BASE + '/user/me', { credentials: 'include' });
+      if (meRes && meRes.ok) {
+        const data = await meRes.json();
+        const u = data.user;
+        localStorage.setItem('currentUser', JSON.stringify({ id: u._id || u.id, name: u.name, email: u.email, role: u.role }));
+        return;
+      }
+    } catch (err) {
+      console.warn('Failed to fetch profile from server:', err);
+    }
+
+    const current = JSON.parse(localStorage.getItem('currentUser'));
+    if (!current) {
+      window.location.href = 'farmer-login.html';
+      return;
+    }
+  }
+
+  loadProfile();
+
+  // Check for edit parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const editId = urlParams.get('edit');
+  let editingId = null;
+
+  if (editId) {
+    document.getElementById('pageTitle').innerText = 'Edit Product';
+    document.getElementById('saveProductBtn').innerText = 'Update Product';
+    // Load product data
+    const products = getProductsLocal();
+    const product = products.find(p => (p._id || p.id) === editId);
+    if (product) {
+      editingId = editId;
+      populateForm(product);
+    } else {
+      alert('Product not found');
+      window.location.href = 'view-inventory.html';
+    }
+  }
+
+  function populateForm(product) {
+    document.getElementById('prodName').value = product.name || '';
+    document.getElementById('prodPrice').value = product.price || '';
+    document.getElementById('prodQty').value = product.quantity || '';
+    document.getElementById('prodImage').value = product.image || '';
+    document.getElementById('prodNotes').value = product.notes || '';
+    document.getElementById('prodCategory').value = product.category || '';
+    document.getElementById('prodLocation').value = product.location || '';
+  }
+
+  // Save product logic (simplified from dashboard)
+  function getProductsLocal() {
+    try { return JSON.parse(localStorage.getItem('localProducts') || '[]'); } catch (e) { return []; }
+  }
+  function saveProductsLocal(products) { localStorage.setItem('localProducts', JSON.stringify(products)); }
+  function getCurrentUser() { return JSON.parse(localStorage.getItem('currentUser') || 'null'); }
+
+  async function saveProduct(product, file) {
+    const user = getCurrentUser();
+    if (!user) {
+      const all = getProductsLocal();
+      all.push(product);
+      saveProductsLocal(all);
+      return { ok: true, source: 'local' };
+    }
+
+    product.ownerId = user.id;
+    const useFetchWithAuth = !!window.fetchWithAuth;
+    try {
+      if (useFetchWithAuth) {
+        if (file) {
+          const form = new FormData();
+          form.append('name', product.name);
+          form.append('price', product.price);
+          form.append('quantity', product.quantity);
+          if (product.notes) form.append('notes', product.notes);
+          if (product.category) form.append('category', product.category);
+          if (product.location) form.append('location', product.location);
+          form.append('ownerId', product.ownerId);
+          form.append('image', file, file.name);
+
+          const res = await fetchWithAuth(API_BASE + '/products', { method: 'POST', body: form });
+          if (res && res.ok) {
+            const data = await res.json();
+            const all = getProductsLocal();
+            all.push({ ...data.product, ownerId: user.id });
+            saveProductsLocal(all);
+            return { ok: true, source: 'server' };
+          }
+        } else {
+          const res = await fetchWithAuth(API_BASE + '/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(product) });
+          if (res && res.ok) {
+            const data = await res.json();
+            const all = getProductsLocal();
+            all.push({ ...data.product, ownerId: user.id });
+            saveProductsLocal(all);
+            return { ok: true, source: 'server' };
+          }
+        }
+      } else {
+        try {
+          if (file) {
+            const form = new FormData();
+            form.append('name', product.name);
+            form.append('price', product.price);
+            form.append('quantity', product.quantity);
+            if (product.notes) form.append('notes', product.notes);
+            if (product.category) form.append('category', product.category);
+            if (product.location) form.append('location', product.location);
+            form.append('ownerId', product.ownerId);
+            form.append('image', file, file.name);
+            const res = await fetch(API_BASE + '/products', { method: 'POST', body: form, credentials: 'include' });
+            if (res && res.ok) {
+              const data = await res.json();
+              const all = getProductsLocal();
+              all.push({ ...data.product, ownerId: user.id });
+              saveProductsLocal(all);
+              return { ok: true, source: 'server' };
+            }
+          } else {
+            const res = await fetch(API_BASE + '/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(product) });
+            if (res && res.ok) {
+              const data = await res.json();
+              const all = getProductsLocal();
+              all.push({ ...data.product, ownerId: user.id });
+              saveProductsLocal(all);
+              return { ok: true, source: 'server' };
+            }
+          }
+        } catch (e) { /* fall through to local */ }
+      }
+    } catch (e) { console.warn('Server product save failed, falling back to local', e); }
+
+    if (file) {
+      try {
+        const dataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        product.image = dataUrl;
+      } catch (e) {
+        console.warn('Failed to read file locally', e);
+      }
+    }
+
+    const all = getProductsLocal();
+    all.push(product);
+    saveProductsLocal(all);
+    return { ok: true, source: 'local' };
+  }
+
+  async function updateProduct(product, file) {
+    const productId = editingId;
+    if (!productId) return { ok: false };
+
+    const user = getCurrentUser();
+    product.ownerId = user.id;
+    const useFetchWithAuth = !!window.fetchWithAuth;
+    try {
+      if (file) {
+        const form = new FormData();
+        form.append('name', product.name);
+        form.append('price', product.price);
+        form.append('quantity', product.quantity);
+        if (product.notes) form.append('notes', product.notes);
+        if (product.category) form.append('category', product.category);
+        if (product.location) form.append('location', product.location);
+        if (product.image) form.append('image', product.image);
+        form.append('image', file, file.name);
+
+        const res = useFetchWithAuth
+          ? await fetchWithAuth(`${API_BASE}/products/${productId}`, { method: 'PUT', body: form })
+          : await fetch(`${API_BASE}/products/${productId}`, { method: 'PUT', body: form, credentials: 'include' });
+        if (res && res.ok) {
+          const data = await res.json();
+          const all = getProductsLocal().map(p => ((p._id || p.id) === productId ? { ...data.product, ownerId: user.id } : p));
+          saveProductsLocal(all);
+          return { ok: true, source: 'server', product: data.product };
+        }
+      } else {
+        const payload = { ...product };
+        const res = useFetchWithAuth
+          ? await fetchWithAuth(`${API_BASE}/products/${productId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+          : await fetch(`${API_BASE}/products/${productId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload) });
+        if (res && res.ok) {
+          const data = await res.json();
+          const all = getProductsLocal().map(p => ((p._id || p.id) === productId ? { ...data.product, ownerId: user.id } : p));
+          saveProductsLocal(all);
+          return { ok: true, source: 'server', product: data.product };
+        }
+      }
+    } catch (err) {
+      console.warn('Update failed, saving locally:', err);
+    }
+
+    const all = getProductsLocal().map(p => {
+      if ((p._id || p.id) !== productId) return p;
+      return { ...p, ...product, ownerId: user.id };
+    });
+    saveProductsLocal(all);
+    return { ok: true, source: 'local' };
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const saveBtn = document.getElementById('saveProductBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    saveBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('prodName').value.trim();
+      const price = parseFloat(document.getElementById('prodPrice').value);
+      const qty = parseFloat(document.getElementById('prodQty').value);
+      const image = document.getElementById('prodImage').value.trim();
+      const fileInput = document.getElementById('prodImageFile');
+      const file = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
+      const notes = document.getElementById('prodNotes').value.trim();
+      const category = document.getElementById('prodCategory').value.trim();
+      const location = document.getElementById('prodLocation').value.trim();
+
+      if (!name || !price || isNaN(price) || !qty || isNaN(qty)) return alert('Please enter name, price and quantity');
+
+      const user = getCurrentUser();
+      if (!user) return alert('Not logged in');
+
+      const product = {
+        id: editingId || 'p' + Date.now(),
+        name,
+        price,
+        quantity: qty,
+        image,
+        notes,
+        category,
+        location,
+        ownerId: user.id,
+        createdAt: new Date().toISOString()
+      };
+
+      const res = editingId ? await updateProduct(product, file) : await saveProduct(product, file);
+      alert('Product ' + (editingId ? 'updated' : 'saved') + ' (' + (res && res.source ? res.source : 'local') + ')');
+      window.location.href = 'view-inventory.html'; // Redirect to inventory
+    });
+
+    cancelBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = editingId ? 'view-inventory.html' : 'farmer-dashboard.html';
+    });
+
+    // Image preview handling
+    const fileInput = document.getElementById('prodImageFile');
+    const previewImg = document.getElementById('prodPreview');
+    let currentPreviewUrl = null;
+
+    function clearPreview() {
+      if (currentPreviewUrl) {
+        URL.revokeObjectURL(currentPreviewUrl);
+        currentPreviewUrl = null;
+      }
+      previewImg.src = '';
+      previewImg.classList.add('hidden');
+      if (fileInput) fileInput.value = '';
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', () => {
+        const f = fileInput.files && fileInput.files[0];
+        if (!f) return clearPreview();
+        if (currentPreviewUrl) URL.revokeObjectURL(currentPreviewUrl);
+        currentPreviewUrl = URL.createObjectURL(f);
+        previewImg.src = currentPreviewUrl;
+        previewImg.classList.remove('hidden');
+      });
+    }
+
+    const imageUrlInput = document.getElementById('prodImage');
+    if (imageUrlInput) {
+      imageUrlInput.addEventListener('input', () => {
+        const url = imageUrlInput.value.trim();
+        if (fileInput && fileInput.files && fileInput.files.length) return;
+        if (!url) return clearPreview();
+        previewImg.src = url;
+        previewImg.classList.remove('hidden');
+      });
+    }
+  });
+</script>
+<script src="../../shared/authFetch.js"></script>
+</body>
+</html>

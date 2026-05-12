@@ -2,6 +2,11 @@
   const API_BASE = 'http://localhost:5000/api/products';
   const grid = document.getElementById('productsGrid');
   const searchInput = document.getElementById('searchInput');
+  const minPriceInput = document.getElementById('minPrice');
+  const maxPriceInput = document.getElementById('maxPrice');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const locationFilter = document.getElementById('locationFilter');
+  const clearFiltersBtn = document.getElementById('clearFilters');
   const prevBtn = document.getElementById('prevPage');
   const nextBtn = document.getElementById('nextPage');
   const pageInfo = document.getElementById('pageInfo');
@@ -28,7 +33,13 @@
     const meta = document.createElement('div');
     meta.className = 'meta';
     const farmerName = (p.ownerId && p.ownerId.name) || p.ownerName || 'Farmer';
-    meta.textContent = (p.quantity != null ? `Qty: ${p.quantity} • ` : '') + `By: ${farmerName}` + (p.notes ? ` • ${p.notes}` : '');
+    const tags = [];
+    if (p.quantity != null) tags.push(`Qty: ${p.quantity}`);
+    tags.push(`By: ${farmerName}`);
+    if (p.category) tags.push(`Category: ${p.category}`);
+    if (p.location) tags.push(`Location: ${p.location}`);
+    if (p.notes) tags.push(p.notes);
+    meta.textContent = tags.join(' • ');
 
     const price = document.createElement('div');
     price.className = 'price';
@@ -46,7 +57,15 @@
 
   async function fetchPage(){
     const q = (searchInput.value || '').trim();
-    const url = `${API_BASE}?page=${state.page}&limit=${state.limit}&q=${encodeURIComponent(q)}`;
+    const minPrice = (minPriceInput.value || '').trim();
+    const maxPrice = (maxPriceInput.value || '').trim();
+    const category = (categoryFilter.value || '').trim();
+    const location = (locationFilter.value || '').trim();
+    let url = `${API_BASE}?page=${state.page}&limit=${state.limit}&q=${encodeURIComponent(q)}`;
+    if (minPrice) url += `&minPrice=${encodeURIComponent(minPrice)}`;
+    if (maxPrice) url += `&maxPrice=${encodeURIComponent(maxPrice)}`;
+    if (category) url += `&category=${encodeURIComponent(category)}`;
+    if (location) url += `&location=${encodeURIComponent(location)}`;
     try{
       const res = await fetch(url, {cache: 'no-store'});
       if(!res.ok) throw new Error('network');
@@ -56,11 +75,15 @@
       render(data.products || []);
       updatePager();
     }catch(err){
-      // fallback to localProducts with client-side pagination
+      // fallback to localProducts with client-side pagination and filtering
       const local = localStorage.getItem('localProducts');
       const arr = local ? JSON.parse(local) : [];
-      const q = (searchInput.value || '').trim().toLowerCase();
-      const filtered = q ? arr.filter(p => (p.name||'').toLowerCase().includes(q)) : arr;
+      let filtered = arr;
+      if (q) filtered = filtered.filter(p => (p.name||'').toLowerCase().includes(q.toLowerCase()));
+      if (minPrice) filtered = filtered.filter(p => p.price >= parseFloat(minPrice));
+      if (maxPrice) filtered = filtered.filter(p => p.price <= parseFloat(maxPrice));
+      if (category) filtered = filtered.filter(p => (p.category||'').toLowerCase().includes(category.toLowerCase()));
+      if (location) filtered = filtered.filter(p => (p.location||'').toLowerCase().includes(location.toLowerCase()));
       state.total = filtered.length;
       state.totalPages = Math.max(1, Math.ceil(state.total / state.limit));
       const start = (state.page - 1) * state.limit;
@@ -90,6 +113,19 @@
   });
 
   searchInput.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
+  minPriceInput.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
+  maxPriceInput.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
+  categoryFilter.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
+  locationFilter.addEventListener('input', ()=>{ state.page = 1; fetchPage(); });
+  clearFiltersBtn.addEventListener('click', ()=>{
+    searchInput.value = '';
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    categoryFilter.value = '';
+    locationFilter.value = '';
+    state.page = 1;
+    fetchPage();
+  });
   prevBtn.addEventListener('click', ()=>{ if(state.page>1){ state.page--; fetchPage(); }});
   nextBtn.addEventListener('click', ()=>{ if(state.page < state.totalPages){ state.page++; fetchPage(); }});
   pageSizeSel.addEventListener('change', ()=>{ state.limit = parseInt(pageSizeSel.value,10); state.page = 1; fetchPage(); });

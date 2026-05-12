@@ -65,7 +65,7 @@ async function signupCustomer() {
   const password = document.getElementById('signupPassword').value;
   const rePass = document.getElementById('reEnterPassword').value;
 
-  if (!name || !email || !phone || !password || !rePass) return alert('Please fill all required fields');
+  if (!name || !email || !phone || !otp || !password || !rePass) return alert('Please fill all required fields');
   if (!validateEmail(email)) return alert('Invalid email');
   if (phone.length < 8) return alert('Enter a valid mobile number');
   if (!isOTPValid(otp)) return alert('Invalid or expired OTP');
@@ -134,7 +134,7 @@ async function loginCustomer() {
     const user = findUserByEmail(email, 'customer');
     if (!user) return alert('No customer account found (offline)');
     if (user.password !== password) return alert('Incorrect password (offline)');
-    localStorage.setItem('currentUser', JSON.stringify({ id: user.id, name: user.name, email: user.email, role: user.role }));
+    localStorage.setItem('currentUser', JSON.stringify({ id: user.id, name: user.name, email: user.email, role: 'customer' }));
     window.location.href = '../customer-dashboard.html';
   }
 }

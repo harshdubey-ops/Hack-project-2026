@@ -20,6 +20,13 @@
   <main class="wrap">
     <section class="controls">
       <input id="searchInput" type="search" placeholder="Search products by name..." />
+      <div class="filters">
+        <input id="minPrice" type="number" placeholder="Min price" min="0" step="0.01" />
+        <input id="maxPrice" type="number" placeholder="Max price" min="0" step="0.01" />
+        <input id="categoryFilter" type="text" placeholder="Category" />
+        <input id="locationFilter" type="text" placeholder="Location" />
+        <button id="clearFilters">Clear Filters</button>
+      </div>
       <div class="pagination-controls">
         <label for="pageSize">Per page:</label>
         <select id="pageSize">
