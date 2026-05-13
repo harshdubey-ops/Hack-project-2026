@@ -94,6 +94,57 @@
     localStorage.removeItem('currentUser');
     window.location.href = 'farmer-login.html';
   });
+
+  async function saveProduct(product, file) {
+  const user = getCurrentUser();
+  if (!user) {
+    // fallback offline
+    const all = getProductsLocal();
+    all.push(product);
+    saveProductsLocal(all);
+    window.showToast('Product saved locally (offline mode)', 'info');
+    return { ok: true, source: 'local' };
+  }
+
+  product.ownerId = user.id;
+  const useFetchWithAuth = !!window.fetchWithAuth;
+  try {
+    let response;
+    if (file) {
+      const formData = new FormData();
+      Object.keys(product).forEach(key => formData.append(key, product[key]));
+      formData.append('image', file);
+      if (useFetchWithAuth) {
+        response = await fetchWithAuth(API_BASE + '/products', { method: 'POST', body: formData });
+      } else {
+        response = await fetch(API_BASE + '/products', { method: 'POST', body: formData, credentials: 'include' });
+      }
+    } else {
+      const payload = { ...product };
+      if (useFetchWithAuth) {
+        response = await fetchWithAuth(API_BASE + '/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      } else {
+        response = await fetch(API_BASE + '/products', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload) });
+      }
+    }
+    if (response && response.ok) {
+      const data = await response.json();
+      const all = getProductsLocal().filter(p => p.id !== product.id);
+      all.push({ ...data.product, ownerId: user.id });
+      saveProductsLocal(all);
+      window.showToast('Product added to marketplace!', 'success');
+      return { ok: true, source: 'server' };
+    }
+  } catch (err) {
+    console.warn('Server save failed, using local:', err);
+  }
+  // fallback local
+  const all = getProductsLocal();
+  all.push(product);
+  saveProductsLocal(all);
+  window.showToast('Product saved locally (server unreachable)', 'warning');
+  return { ok: true, source: 'local' };
+}
 </script>
 </body>
 </html>

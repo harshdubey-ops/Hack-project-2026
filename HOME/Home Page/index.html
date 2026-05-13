@@ -3,258 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Fasal Junction</title>
-
+  <title>Fasal Junction - Fresh From Farm</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-
 <body>
-
   <!-- Navbar -->
   <nav>
-
-    <h1 id="title">🌾 Fasal Junction</h1>
-
-    <div class="nav-buttons">
-      <button type="button" id="farmerBtn">Farmer Login</button>
-      <button type="button" id="customerBtn">Customer Login</button>
-      <button type="button" id="browseBtn">Browse Products</button>
+    <div class="logo">
+      <i class="fas fa-leaf"></i>
+      <h1 id="title">🌾 Fasal Junction</h1>
     </div>
-
+    <div class="lang-nav">
+      <button class="lang-switch" id="langEnBtn">🇬🇧 EN</button>
+      <button class="lang-switch" id="langHiBtn">🇮🇳 HI</button>
+    </div>
+    <div class="nav-buttons">
+      <button type="button" id="farmerBtn"><i class="fas fa-tractor"></i> <span data-i18n="farmer_login">Farmer Login</span></button>
+      <button type="button" id="customerBtn"><i class="fas fa-user"></i> <span data-i18n="customer_login">Customer Login</span></button>
+      <button type="button" id="browseBtn"><i class="fas fa-search"></i> <span data-i18n="browse_products">Browse Products</span></button>
+    </div>
   </nav>
-
-  <!-- Language Buttons -->
-  <div class="language-buttons">
-
-    <button onclick="setEnglish()">English</button>
-
-    <button onclick="setHindi()">हिन्दी</button>
-
-  </div>
 
   <!-- Hero Section -->
   <section class="hero">
-
-    <h2 id="heroTitle">Fresh From Farm To Home</h2>
-
-    <p id="heroText">
-      Buy fresh vegetables directly from farmers.
-    </p>
-
-    <input type="text" id="searchBox"
-    placeholder="Search Products">
-
-    <button id="searchBtn">Search</button>
-
+    <div class="hero-content fade-in">
+      <h2 id="heroTitle">Fresh From Farm To Home</h2>
+      <p id="heroText">Buy fresh vegetables directly from farmers.</p>
+      <div class="search-area">
+        <input type="text" id="searchBox" data-i18n-placeholder="search_products" placeholder="Search Products">
+        <button id="searchBtn"><i class="fas fa-search"></i> <span data-i18n="search">Search</span></button>
+      </div>
+    </div>
   </section>
 
-  <!-- Products -->
+  <!-- Products Section -->
   <section class="products">
-
-    <!-- Tomato -->
-    <div class="card">
-
-      <img src="https://images.unsplash.com/photo-1546094096-0df4bcaaa337" alt="Tomato">
-
-      <h3 class="product-name"
-      data-en="Fresh Tomatoes"
-      data-hi="ताज़े टमाटर">
-      Fresh Tomatoes
-      </h3>
-
-      <p class="card-price">₹40/kg</p>
-
-      <button type="button" class="cart-btn"
-      data-en="Add To Cart"
-      data-hi="कार्ट में जोड़ें">
-      Add To Cart
-      </button>
-
-    </div>
-
-    <!-- Potato -->
-    <div class="card">
-
-      <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655" alt="Potato">
-
-      <h3 class="product-name"
-      data-en="Fresh Potatoes"
-      data-hi="ताज़े आलू">
-      Fresh Potatoes
-      </h3>
-
-      <p class="card-price">₹30/kg</p>
-
-      <button type="button" class="cart-btn"
-      data-en="Add To Cart"
-      data-hi="कार्ट में जोड़ें">
-      Add To Cart
-      </button>
-
-    </div>
-
-    <!-- Onion -->
-    <div class="card">
-
-      <img src="https://images.unsplash.com/photo-1508747703725-719777637510" alt="Onion">
-
-      <h3 class="product-name"
-      data-en="Fresh Onions"
-      data-hi="ताज़े प्याज">
-      Fresh Onions
-      </h3>
-
-      <p class="card-price">₹35/kg</p>
-
-      <button type="button" class="cart-btn"
-      data-en="Add To Cart"
-      data-hi="कार्ट में जोड़ें">
-      Add To Cart
-      </button>
-
-    </div>
-
-    <!-- Carrot -->
-    <div class="card">
-
-      <img src="https://images.unsplash.com/photo-1447175008436-054170c2e979" alt="Carrot">
-
-      <h3 class="product-name"
-      data-en="Fresh Carrots"
-      data-hi="ताज़ी गाजर">
-      Fresh Carrots
-      </h3>
-
-      <p class="card-price">₹50/kg</p>
-
-      <button type="button" class="cart-btn"
-      data-en="Add To Cart"
-      data-hi="कार्ट में जोड़ें">
-      Add To Cart
-      </button>
-
-    </div>
-
-    <!-- Capsicum -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=600" alt="Capsicum">
-      <h3 class="product-name" data-en="Green Capsicum" data-hi="हरी शिमला मिर्च">Green Capsicum</h3>
-      <p class="card-price">₹55/kg</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
-    <!-- Cauliflower -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1568584711073-3eeb758f0e99?w=600" alt="Cauliflower">
-      <h3 class="product-name" data-en="Fresh Cauliflower" data-hi="ताज़ा फूलगोभी">Fresh Cauliflower</h3>
-      <p class="card-price">₹45/kg</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
-    <!-- Cucumber -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1604977042232-2a67329f1e56?w=600" alt="Cucumber">
-      <h3 class="product-name" data-en="Garden Cucumber" data-hi="खीरा">Garden Cucumber</h3>
-      <p class="card-price">₹25/kg</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
-    <!-- Spinach -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=600" alt="Spinach">
-      <h3 class="product-name" data-en="Baby Spinach" data-hi="पालक">Baby Spinach</h3>
-      <p class="card-price">₹20/bunch</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
-    <!-- Lemon -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1590502593741-42a996133562?w=600" alt="Lemon">
-      <h3 class="product-name" data-en="Fresh Lemons" data-hi="नींबू">Fresh Lemons</h3>
-      <p class="card-price">₹60/kg</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
-    <!-- Mango -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1605027990121-cbae57a5a8c5?w=600" alt="Mango">
-      <h3 class="product-name" data-en="Alphonso Mango" data-hi="आम">Alphonso Mango</h3>
-      <p class="card-price">₹120/kg</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
-    <!-- Apple -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=600" alt="Apple">
-      <h3 class="product-name" data-en="Kashmiri Apples" data-hi="सेब">Kashmiri Apples</h3>
-      <p class="card-price">₹150/kg</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
-    <!-- Brinjal -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1591950859988-66e5d4d7f264?w=600" alt="Brinjal">
-      <h3 class="product-name" data-en="Purple Brinjal" data-hi="बैंगन">Purple Brinjal</h3>
-      <p class="card-price">₹38/kg</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
-    <!-- Coriander -->
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1589887336899-6a0b6c8d9141?w=600" alt="Coriander">
-      <h3 class="product-name" data-en="Fresh Coriander" data-hi="धनिया">Fresh Coriander</h3>
-      <p class="card-price">₹15/bunch</p>
-      <button type="button" class="cart-btn" data-en="Add To Cart" data-hi="कार्ट में जोड़ें">Add To Cart</button>
-    </div>
-
+    <!-- Products will be populated dynamically for better maintainability -->
+    <div id="productsGrid" class="products-grid"></div>
   </section>
 
   <!-- Footer -->
   <footer>
-
     <div class="footer-container">
-
       <div id="about">
-        <h3>🌾 Fasal Junction</h3>
-
-        <p>
-          Fresh vegetables directly from farmers to your home.
-        </p>
+        <h3><i class="fas fa-leaf"></i> Fasal Junction</h3>
+        <p>Fresh vegetables directly from farmers to your home.</p>
       </div>
-
       <div>
-        <h3>Quick Links</h3>
-        <p><a href="index.html">Home</a></p>
-        <p><a href="../FARMER/CUSTOMER/products.html">Products</a></p>
-        <p><a href="#contact">Contact</a></p>
-        <p><a href="#about">About Us</a></p>
-        <p><a href="../help/farmer-help.html">Farmer help</a></p>
-        <p><a href="../help/customer-help.html">Customer help</a></p>
+        <h3 data-i18n="quick_links">Quick Links</h3>
+        <p><a href="index.html"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a></p>
+        <p><a href="../FARMER/CUSTOMER/products.html"><i class="fas fa-store"></i> <span data-i18n="products">Products</span></a></p>
+        <p><a href="#contact"><i class="fas fa-envelope"></i> <span data-i18n="contact">Contact</span></a></p>
+        <p><a href="#about"><i class="fas fa-info-circle"></i> <span data-i18n="about_us">About Us</span></a></p>
+        <p><a href="../help/farmer-help.html"><i class="fas fa-question-circle"></i> <span data-i18n="farmer_help">Farmer help</span></a></p>
+        <p><a href="../help/customer-help.html"><i class="fas fa-question-circle"></i> <span data-i18n="customer_help">Customer help</span></a></p>
       </div>
-
       <div id="contact">
-        <h3>Help & Support</h3>
-
-        <p>Email: <a href="mailto:support@fasaljunction.com">support@fasaljunction.com</a></p>
-
-        <p>Phone: <a href="tel:+919876543210">+91 9876543210</a></p>
-
-        <input type="email" id="subscribeEmail"
-        placeholder="Enter your email">
-
-        <button type="button" id="subscribeBtn">Subscribe</button>
+        <h3 data-i18n="help_support">Help & Support</h3>
+        <p><i class="fas fa-envelope"></i> <a href="mailto:support@fasaljunction.com">support@fasaljunction.com</a></p>
+        <p><i class="fas fa-phone-alt"></i> <a href="tel:+919876543210">+91 9876543210</a></p>
+        <div class="subscribe">
+          <input type="email" id="subscribeEmail" data-i18n-placeholder="enter_email" placeholder="Enter your email">
+          <button type="button" id="subscribeBtn"><i class="fas fa-paper-plane"></i> <span data-i18n="subscribe">Subscribe</span></button>
+        </div>
       </div>
-
     </div>
-
     <div class="copyright">
       © 2026 Fasal Junction | All Rights Reserved
     </div>
-
   </footer>
 
-  <script src="Script.js"></script>
+  <script src="../shared/global.js"></script>
+  <script>
+    // Product data for home page
+    const homeProducts = [
+      { nameEn: "Fresh Tomatoes", nameHi: "ताज़े टमाटर", price: "₹40/kg", img: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337", id: "tomato" },
+      { nameEn: "Fresh Potatoes", nameHi: "ताज़े आलू", price: "₹30/kg", img: "https://images.unsplash.com/photo-1518977676601-b53f82aba655", id: "potato" },
+      { nameEn: "Fresh Onions", nameHi: "ताज़े प्याज", price: "₹35/kg", img: "https://images.unsplash.com/photo-1508747703725-719777637510", id: "onion" },
+      { nameEn: "Fresh Carrots", nameHi: "ताज़ी गाजर", price: "₹50/kg", img: "https://images.unsplash.com/photo-1447175008436-054170c2e979", id: "carrot" },
+      { nameEn: "Green Capsicum", nameHi: "हरी शिमला मिर्च", price: "₹55/kg", img: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83", id: "capsicum" },
+      { nameEn: "Fresh Cauliflower", nameHi: "ताज़ा फूलगोभी", price: "₹45/kg", img: "https://images.unsplash.com/photo-1568584711073-3eeb758f0e99", id: "cauliflower" },
+      { nameEn: "Garden Cucumber", nameHi: "खीरा", price: "₹25/kg", img: "https://images.unsplash.com/photo-1604977042232-2a67329f1e56", id: "cucumber" },
+      { nameEn: "Baby Spinach", nameHi: "पालक", price: "₹20/bunch", img: "https://images.unsplash.com/photo-1576045057995-568f588f82fb", id: "spinach" },
+      { nameEn: "Fresh Lemons", nameHi: "नींबू", price: "₹60/kg", img: "https://images.unsplash.com/photo-1590502593741-42a996133562", id: "lemon" },
+      { nameEn: "Alphonso Mango", nameHi: "आम", price: "₹120/kg", img: "https://images.unsplash.com/photo-1605027990121-cbae57a5a8c5", id: "mango" },
+      { nameEn: "Kashmiri Apples", nameHi: "सेब", price: "₹150/kg", img: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6", id: "apple" },
+      { nameEn: "Purple Brinjal", nameHi: "बैंगन", price: "₹38/kg", img: "https://images.unsplash.com/photo-1591950859988-66e5d4d7f264", id: "brinjal" },
+      { nameEn: "Fresh Coriander", nameHi: "धनिया", price: "₹15/bunch", img: "https://images.unsplash.com/photo-1589887336899-6a0b6c8d9141", id: "coriander" }
+    ];
 
+    let currentLang = localStorage.getItem('lang') || 'en';
+
+    function renderHomeProducts() {
+      const grid = document.getElementById('productsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      homeProducts.forEach((product, idx) => {
+        const name = currentLang === 'hi' ? product.nameHi : product.nameEn;
+        const card = document.createElement('div');
+        card.className = 'card slide-up';
+        card.style.animationDelay = `${idx * 0.03}s`;
+        card.innerHTML = `
+          <img src="${product.img}" alt="${name}" loading="lazy">
+          <h3 class="product-name">${name}</h3>
+          <p class="card-price">${product.price}</p>
+          <button class="cart-btn" data-id="${product.id}" data-name="${name}" data-price="${parseInt(product.price)}" data-img="${product.img}">
+            <i class="fas fa-cart-plus"></i> <span data-i18n="add_to_cart">Add To Cart</span>
+          </button>
+        `;
+        grid.appendChild(card);
+      });
+
+      document.querySelectorAll('.cart-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const name = btn.dataset.name;
+          const price = parseInt(btn.dataset.price);
+          const img = btn.dataset.img;
+          const pid = 'home-' + btn.dataset.id;
+          let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+          let existing = cart.find(i => i.productId === pid);
+          if (existing) existing.quantity += 1;
+          else {
+            cart.push({ productId: pid, name: name, price: price, image: img, farmer: 'Local farmers', quantity: 1 });
+          }
+          localStorage.setItem('cart', JSON.stringify(cart));
+          window.showToast(name + ' added to cart!', 'success');
+        });
+      });
+    }
+
+    // Language handling
+    document.getElementById('langEnBtn').addEventListener('click', () => { currentLang = 'en'; localStorage.setItem('lang', 'en'); updateHomeLanguage(); });
+    document.getElementById('langHiBtn').addEventListener('click', () => { currentLang = 'hi'; localStorage.setItem('lang', 'hi'); updateHomeLanguage(); });
+
+    function updateHomeLanguage() {
+      const texts = {
+        en: {
+          title: '🌾 Fasal Junction',
+          farmerBtn: 'Farmer Login',
+          customerBtn: 'Customer Login',
+          browseBtn: 'Browse Products',
+          heroTitle: 'Fresh From Farm To Home',
+          heroText: 'Buy fresh products directly from farmers.',
+          searchPlaceholder: 'Search Products',
+          searchBtn: 'Search'
+        },
+        hi: {
+          title: '🌾 फसल जंक्शन',
+          farmerBtn: 'किसान लॉगिन',
+          customerBtn: 'ग्राहक लॉगिन',
+          browseBtn: 'उत्पाद देखें',
+          heroTitle: 'खेत से सीधे आपके घर तक',
+          heroText: 'किसानों से सीधे ताज़े उत्पाद खरीदें।',
+          searchPlaceholder: 'उत्पाद खोजें',
+          searchBtn: 'खोजें'
+        }
+      };
+      const t = texts[currentLang];
+      document.getElementById('title').innerHTML = t.title;
+      document.getElementById('farmerBtn').innerHTML = `<i class="fas fa-tractor"></i> ${t.farmerBtn}`;
+      document.getElementById('customerBtn').innerHTML = `<i class="fas fa-user"></i> ${t.customerBtn}`;
+      document.getElementById('browseBtn').innerHTML = `<i class="fas fa-search"></i> ${t.browseBtn}`;
+      document.getElementById('heroTitle').innerText = t.heroTitle;
+      document.getElementById('heroText').innerText = t.heroText;
+      document.getElementById('searchBox').placeholder = t.searchPlaceholder;
+      document.getElementById('searchBtn').innerHTML = `<i class="fas fa-search"></i> ${t.searchBtn}`;
+      renderHomeProducts();
+    }
+
+    function runSearch() {
+      const q = document.getElementById('searchBox').value.trim();
+      if (q) window.location.href = '../FARMER/CUSTOMER/products.html?q=' + encodeURIComponent(q);
+      else window.location.href = '../FARMER/CUSTOMER/products.html';
+    }
+
+    function subscribeNewsletter() {
+      const email = document.getElementById('subscribeEmail').value.trim();
+      if (!email) { window.showToast('Please enter email', 'error'); return; }
+      if (!/^\S+@\S+\.\S+$/.test(email)) { window.showToast('Invalid email', 'error'); return; }
+      window.showToast('Subscribed!', 'success');
+      document.getElementById('subscribeEmail').value = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHomeProducts();
+      document.getElementById('farmerBtn').addEventListener('click', () => window.location.href = '../FARMER/farmer%20login/farmer-login.html');
+      document.getElementById('customerBtn').addEventListener('click', () => window.location.href = '../FARMER/CUSTOMER/customer%20login/customer-login.html');
+      document.getElementById('browseBtn').addEventListener('click', () => window.location.href = '../FARMER/CUSTOMER/products.html');
+      document.getElementById('searchBtn').addEventListener('click', runSearch);
+      document.getElementById('searchBox').addEventListener('keypress', (e) => { if (e.key === 'Enter') runSearch(); });
+      document.getElementById('subscribeBtn').addEventListener('click', subscribeNewsletter);
+    });
+  </script>
 </body>
 </html>

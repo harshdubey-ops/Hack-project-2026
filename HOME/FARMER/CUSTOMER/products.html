@@ -1,54 +1,147 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Products - Marketplace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Products - Fasal Junction Marketplace</title>
   <link rel="stylesheet" href="products.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* Additional modern styles */
+    .site-header {
+      background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    }
+    .site-header .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+    }
+    .site-header nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    .site-header nav a:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .lang-header {
+      display: flex;
+      gap: 8px;
+    }
+    .lang-header button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .lang-header button:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    .controls {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .btn-cart {
+      background: var(--secondary);
+      transition: var(--transition);
+    }
+    .btn-cart:hover {
+      background: var(--secondary-dark);
+      transform: translateY(-2px);
+    }
+    .pager button {
+      transition: var(--transition);
+    }
+    .pager button:hover:not(:disabled) {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+    }
+    #clearFilters {
+      background: #e0e0e0;
+      transition: var(--transition);
+    }
+    #clearFilters:hover {
+      background: #ccc;
+      transform: translateY(-2px);
+    }
+    @media (max-width: 640px) {
+      .site-header .wrap {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .site-header nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
     <div class="wrap">
-      <h1>Marketplace</h1>
+      <h1><i class="fas fa-store"></i> Marketplace</h1>
+      <div class="lang-header">
+        <button id="langEnBtn">🇬🇧 English</button>
+        <button id="langHiBtn">🇮🇳 हिंदी</button>
+      </div>
       <nav>
-        <a href="../Home Page/index.html">Home</a>
-        <a href="customer-dashboard.html">Dashboard</a>
-        <a href="cart.html">Cart</a>
-        <a href="customer login/customer-login.html">Login</a>
+        <a href="../../Home%20Page/index.html"><i class="fas fa-home"></i> <span data-i18n="home">Home</span></a>
+        <a href="customer-dashboard.html"><i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard">Dashboard</span></a>
+        <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span data-i18n="cart">Cart</span></a>
+        <a href="customer%20login/customer-login.html"><i class="fas fa-sign-in-alt"></i> <span data-i18n="login">Login</span></a>
       </nav>
     </div>
   </header>
 
   <main class="wrap">
-    <section class="controls">
-      <input id="searchInput" type="search" placeholder="Search by product name or notes..." />
+    <section class="controls fade-in">
+      <div class="search-wrapper">
+        <i class="fas fa-search"></i>
+        <input id="searchInput" type="search" data-i18n-placeholder="search" placeholder="Search by product name or notes...">
+      </div>
       <div class="filters">
-        <input id="minPrice" type="number" placeholder="Min price" min="0" step="0.01" />
-        <input id="maxPrice" type="number" placeholder="Max price" min="0" step="0.01" />
-        <input id="categoryFilter" type="text" placeholder="Category" />
-        <input id="ownerFilter" type="search" placeholder="Farmer name" />
-        <input id="locationFilter" type="text" placeholder="Location" />
-        <button id="clearFilters">Clear Filters</button>
+        <input id="minPrice" type="number" data-i18n-placeholder="min_price" placeholder="Min price" min="0" step="0.01">
+        <input id="maxPrice" type="number" data-i18n-placeholder="max_price" placeholder="Max price" min="0" step="0.01">
+        <input id="categoryFilter" type="text" data-i18n-placeholder="category" placeholder="Category">
+        <input id="ownerFilter" type="search" data-i18n-placeholder="farmer_name" placeholder="Farmer name">
+        <input id="locationFilter" type="text" data-i18n-placeholder="location" placeholder="Location">
+        <button id="clearFilters"><i class="fas fa-eraser"></i> <span data-i18n="clear_filters">Clear Filters</span></button>
       </div>
       <div class="pagination-controls">
-        <label for="pageSize">Per page:</label>
+        <label for="pageSize"><span data-i18n="per_page">Per page:</span></label>
         <select id="pageSize">
           <option value="6">6</option>
           <option value="12" selected>12</option>
           <option value="24">24</option>
         </select>
         <div id="pager" class="pager">
-          <button id="prevPage">Prev</button>
+          <button id="prevPage"><i class="fas fa-chevron-left"></i> <span data-i18n="prev">Prev</span></button>
           <span id="pageInfo">1 / 1</span>
-          <button id="nextPage">Next</button>
+          <button id="nextPage"><span data-i18n="next">Next</span> <i class="fas fa-chevron-right"></i></button>
         </div>
       </div>
     </section>
 
-    <section id="productsGrid" class="grid" aria-live="polite"></section>
+    <section id="productsGrid" class="grid" aria-live="polite">
+      <!-- Skeleton loaders -->
+      <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text"></div></div>
+      <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text"></div></div>
+      <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text"></div></div>
+    </section>
   </main>
 
   <script src="../../shared/apiOrigin.js"></script>
+  <script src="../../shared/global.js"></script>
   <script src="products.js"></script>
 </body>
 </html>

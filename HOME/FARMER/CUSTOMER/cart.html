@@ -5,6 +5,144 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shopping Cart</title>
   <link rel="stylesheet" href="customer-dashboard.css">
+  <style>
+    /* Missing CSS variables - defined here */
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #4caf50;
+      --secondary-dark: #e65100;
+      --danger: #c62828;
+      --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      --hover-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    /* Ensure cart-item styles use these variables */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      border-radius: 16px;
+      background: white;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 15px;
+      transition: var(--transition);
+    }
+    .cart-item:hover {
+      transform: translateX(5px);
+      box-shadow: var(--hover-shadow);
+    }
+    .cart-item img {
+      width: 100px;
+      height: 75px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .item-details {
+      flex: 1;
+    }
+    .item-details h4 {
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #e0e0e0;
+      font-weight: bold;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .qty-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+    }
+    .item-total {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: var(--secondary-dark);
+      min-width: 80px;
+      text-align: right;
+    }
+    .remove-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .remove-btn:hover {
+      background: #b71c1c;
+      transform: scale(1.02);
+    }
+    .cart-summary {
+      background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+      padding: 25px;
+      border-radius: 16px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .checkout-btn {
+      background: linear-gradient(45deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: var(--transition);
+    }
+    .checkout-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
+    }
+    .payment {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      padding: 25px;
+      border-radius: 16px;
+      margin-top: 20px;
+    }
+    .upi-details {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 15px 0;
+    }
+    .farmer-contacts {
+      margin: 20px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 12px;
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .cart-item {
+        flex-direction: column;
+        text-align: center;
+      }
+      .item-total {
+        text-align: center;
+      }
+      .quantity-controls {
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="dash-container">
@@ -49,6 +187,21 @@
 <script>
   const API_BASE = (window.F2C_API_ORIGIN || 'http://localhost:5000') + '/api';
 
+  // Helper function to safely extract numeric price from any format (handles ₹, commas, units)
+  function getNumericPrice(priceValue) {
+    if (priceValue === undefined || priceValue === null) return 0;
+    if (typeof priceValue === 'number' && !isNaN(priceValue)) return priceValue;
+    try {
+      const str = typeof priceValue === 'string' ? priceValue : String(priceValue);
+      // Remove everything except digits, dot and minus (so '₹1,234.50/kg' -> '1234.50')
+      const cleaned = str.replace(/[^\d.\-]/g, '');
+      const n = parseFloat(cleaned);
+      return isNaN(n) ? 0 : n;
+    } catch (e) {
+      return 0;
+    }
+  }
+
   function cartLineImageUrl(src) {
     return (typeof F2C_resolveUploadUrl === 'function')
       ? F2C_resolveUploadUrl(src, 'https://via.placeholder.com/100x75?text=No+Image')
@@ -81,56 +234,69 @@
     let totalAmount = 0;
 
     cart.forEach((item, index) => {
-      totalItems += item.quantity;
-      totalAmount += item.price * item.quantity;
+      const quantity = item.quantity || 1;
+      const price = getNumericPrice(item.price);
+      const itemTotal = price * quantity;
+      totalItems += quantity;
+      totalAmount += itemTotal;
 
       const itemDiv = document.createElement('div');
       itemDiv.className = 'cart-item';
       itemDiv.innerHTML = `
         <img src="${cartLineImageUrl(item.image)}" alt="${item.name}">
         <div class="item-details">
-          <h4>${item.name}</h4>
-          <p>Farmer: ${item.farmer}</p>
+          <h4>${escapeHtml(item.name)}</h4>
+          <p>Farmer: ${escapeHtml(item.farmer)}</p>
           ${item.farmerPhone ? `<p class="call-farmer">Call: <a href="tel:${String(item.farmerPhone).replace(/\D/g, '')}">${item.farmerPhone}</a></p>` : ''}
-          <p>Price: ₹${item.price} / kg</p>
+          <p>Price: ₹${price.toFixed(2)} / kg</p>
           <div class="quantity-controls">
             <button class="qty-btn" data-index="${index}" data-action="decrease">-</button>
-            <span>${item.quantity}</span>
+            <span>${quantity}</span>
             <button class="qty-btn" data-index="${index}" data-action="increase">+</button>
           </div>
         </div>
-        <div class="item-total">₹${item.price * item.quantity}</div>
+        <div class="item-total">₹${itemTotal.toFixed(2)}</div>
         <button class="remove-btn" data-index="${index}">Remove</button>
       `;
       cartItems.appendChild(itemDiv);
     });
 
     document.getElementById('totalItems').innerText = totalItems;
-    document.getElementById('totalAmount').innerText = totalAmount;
+    document.getElementById('totalAmount').innerText = totalAmount.toFixed(2);
 
     // Add event listeners
     document.querySelectorAll('.qty-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const index = parseInt(e.target.dataset.index);
-        const action = e.target.dataset.action;
+        const index = parseInt(e.currentTarget.dataset.index);
+        const action = e.currentTarget.dataset.action;
         updateQuantity(index, action);
       });
     });
 
     document.querySelectorAll('.remove-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        const index = parseInt(e.target.dataset.index);
+        const index = parseInt(e.currentTarget.dataset.index);
         removeFromCart(index);
       });
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
     });
   }
 
   function updateQuantity(index, action) {
     const cart = getCart();
     if (action === 'increase') {
-      cart[index].quantity += 1;
-    } else if (action === 'decrease' && cart[index].quantity > 1) {
-      cart[index].quantity -= 1;
+      cart[index].quantity = (cart[index].quantity || 1) + 1;
+    } else if (action === 'decrease' && (cart[index].quantity || 1) > 1) {
+      cart[index].quantity = (cart[index].quantity || 1) - 1;
     }
     saveCart(cart);
   }
@@ -148,8 +314,8 @@
       return;
     }
 
-    const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    document.getElementById('paymentAmount').innerText = totalAmount;
+    const totalAmount = cart.reduce((sum, item) => sum + (getNumericPrice(item.price) * (item.quantity || 1)), 0);
+    document.getElementById('paymentAmount').innerText = totalAmount.toFixed(2);
 
     // Show farmer contacts
     const farmerList = document.getElementById('farmerList');

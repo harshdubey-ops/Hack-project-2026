@@ -83,20 +83,20 @@ exports.deleteProduct = async (req, res) => {
 };
 
 // GET /api/products (public) - list all products
+// GET /api/products (public) - list all products from ALL farmers
 exports.getAllProducts = async (req, res) => {
   try {
-    // pagination and search/filter support
     const page = Math.max(parseInt(req.query.page || '1', 10), 1);
-    const limit = Math.min(Math.max(parseInt(req.query.limit || '12', 10), 1), 100);
+    const limit = Math.min(Math.max(parseInt(req.query.limit || '12', 10), 1), 50);
     const q = (req.query.q || '').trim();
-    const minPrice = req.query.minPrice !== undefined && req.query.minPrice !== '' ? parseFloat(req.query.minPrice) : null;
-    const maxPrice = req.query.maxPrice !== undefined && req.query.maxPrice !== '' ? parseFloat(req.query.maxPrice) : null;
+    const minPrice = req.query.minPrice ? parseFloat(req.query.minPrice) : null;
+    const maxPrice = req.query.maxPrice ? parseFloat(req.query.maxPrice) : null;
     const category = (req.query.category || '').trim();
     const location = (req.query.location || '').trim();
     const owner = (req.query.owner || '').trim();
 
+    // Build filter (NO owner filter by default - show ALL products)
     const filter = {};
-    // Search product name and notes (case-insensitive)
     if (q) {
       filter.$or = [
         { name: { $regex: q, $options: 'i' } },
@@ -109,41 +109,44 @@ exports.getAllProducts = async (req, res) => {
     if (location) filter.location = { $regex: location, $options: 'i' };
 
     const skip = (page - 1) * limit;
-    let total = 0;
     let products = [];
+    let total = 0;
 
+    // If searching by owner name, use aggregation with lookup
     if (owner) {
-      const ownerMatch = { ...filter, 'owner.name': { $regex: owner, $options: 'i' } };
-
-      const countPipeline = [
-        { $lookup: { from: 'users', localField: 'ownerId', foreignField: '_id', as: 'owner' } },
-        { $unwind: '$owner' },
-        { $match: ownerMatch },
-        { $count: 'count' }
+      const lookupPipeline = [
+        { $lookup: { from: 'users', localField: 'ownerId', foreignField: '_id', as: 'ownerInfo' } },
+        { $unwind: { path: '$ownerInfo', preserveNullAndEmptyArrays: true } },
+        { $match: { ...filter, 'ownerInfo.name': { $regex: owner, $options: 'i' } } },
+        { $facet: {
+            total: [{ $count: 'count' }],
+            data: [
+              { $sort: { createdAt: -1 } },
+              { $skip: skip },
+              { $limit: limit },
+              { $addFields: { ownerId: '$ownerInfo' } },
+              { $project: { ownerInfo: 0, 'ownerId.password': 0, 'ownerId.refreshTokens': 0, 'ownerId.email': 0 } }
+            ]
+          }
+        }
       ];
-      const countResult = await Product.aggregate(countPipeline);
-      total = countResult[0]?.count || 0;
-
-      const aggregatePipeline = [
-        { $lookup: { from: 'users', localField: 'ownerId', foreignField: '_id', as: 'owner' } },
-        { $unwind: '$owner' },
-        { $match: ownerMatch },
-        { $sort: { createdAt: -1 } },
-        { $skip: skip },
-        { $limit: limit },
-        { $addFields: { ownerId: '$owner' } },
-        { $project: { owner: 0, 'ownerId.password': 0, 'ownerId.email': 0, 'ownerId.refreshTokens': 0 } }
-      ];
-      products = await Product.aggregate(aggregatePipeline);
+      const result = await Product.aggregate(lookupPipeline);
+      total = result[0]?.total[0]?.count || 0;
+      products = result[0]?.data || [];
     } else {
+      // Normal query - return ALL products with populated owner (including phone)
       total = await Product.countDocuments(filter);
-      products = await Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).populate('ownerId', 'name phone');
+      products = await Product.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate('ownerId', 'name phone');   // ✅ critical: includes phone number
     }
 
     const totalPages = Math.ceil(total / limit) || 1;
     res.json({ products, page, limit, totalPages, total });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error in getAllProducts:', err);
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
